@@ -1,0 +1,34 @@
+<pre class="metadata">
+Markup Shorthands: markdown yes
+Group: WG21
+Status: D
+Shortname: DXXXX
+Audience: EWG, SG15
+Title: Sharing is Caring: Adding a [[shared]] attribute
+Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
+URL:
+Date: 2018-07-15
+Abstract: The first step to supporting tooling plugins is to permit classes,
+Abstract: functions, and namespaces to be shared across library boundaries.
+</pre>
+
+# Motivation # {#motivation}
+
+While the current description of the C++ abstract machine only has a concept
+of libraries and programs, pragmatically the concept of shared libraries has
+arisen. For several decades now (longer than the author has been alive!), the
+ability to link to code shared between multiple programs has been a concept
+implemented across every operating system. This is cause for pause, as C++
+has never acknowledged this, and yet vendors *must* take these concepts into
+account. It is time we standardize this practice. While some would argue that
+statically linking a program is not only necessary, but should be the default
+(a position the author shares), the fact of the matter is that some programs
+require the ability to load plugins at load time. While this proposal does not
+attempt to define an API for dynamic loading of libraries (one was at a point
+submitted), it does seek to standardize the *dllexport* attribute found in
+several compilers. To do this, we propose a `[[shared]]` attribute, that simply
+mimics the `__attribute__((visibility("default")))`,
+`[[gnu::visibility("default")]]`, and `__declspec(dllexport)` attributes found
+amongst the most popular vendors.
+
+
