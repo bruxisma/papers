@@ -1,11 +1,10 @@
 <pre class="metadata">
 Markup Shorthands: markdown yes
 Group: WG21
-URL:
 Status: D
 Shortname: DXXXX
 Audience: EWG
-Title: 86 The Member Pointers
+Title: 86 The Member Pointers (From Exceptions)
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
 URL:
 Date: 2018-07-15
