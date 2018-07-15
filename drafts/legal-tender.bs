@@ -1,0 +1,27 @@
+<pre class="metadata">
+Markup Shorthands: markdown yes
+Group: WG21
+Status: D
+Shortname: DXXXX
+Audience: EWG
+Title: Legal Tender: Making `$` a valid identifier
+Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
+URL:
+Date: 2018-07-15
+Abstract: The `$` character is well known and well use throughout the
+Abstract: programming world. We should permit its use in user identifiers.
+</pre>
+
+# Motivation # {#motivation}
+
+Despite the vast number of characters now alloted to the C++ standard regarding
+identifiers, the one character that is continually seen in extensions is the
+ASCII character `$`. While some want to permit this as an operator `reflexpr`,
+it is the author's opinion that it makes more sense to permit it as an
+identifier in functions, namespaces, and classes, and variables.
+
+While there are some concerns regarding permitting its use in identifiers,
+this paper does layout a solution for vendors who have supported this extension
+on some platforms up until now, while also laying a foundation for future
+characters that exist on all keyboards but might cause linker issues with
+older platforms.
