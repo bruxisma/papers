@@ -1,0 +1,101 @@
+<pre class='metadata'>
+Markup Shorthands: markdown yes
+No Abstract: yes
+Group: WG21
+Status: D
+Shortname: DXXXX
+Revision: 0
+Audience: SG6, SG14, LEWG
+Title: Byteswapping for fun and profit
+Editor: Isabella Muerte, Target, isabella.muerte@target.com
+Date: 2018-07-12
+Repository: slurps-mad-rips/byteswap
+URL: https://wg21.link/DXXXXR0
+!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fAvW7">DXXXXR0</a>
+!Current Source: <a href="https://git.io/fAvWL">slurps-mad-rips/papers/drafts/byteswap.bs</a>
+!Implementation: <a href="https://git.io/fAvWz">slurps-mad-rips/byteswap</a>
+</pre>
+
+# Revision History # {#changelog}
+
+## Revision 0 ## {#r0}
+
+    Initial release. 🎉
+
+# Motivation # {#motivation}
+
+Proposal [[P0553r2]] gives several bit operations to perform on integer types,
+such as popcount, or bit rotation. Despite these new operations provided to
+C++ developers, we still cannot swap (i.e., reverse) the bytes of builtin
+integer types in a performant way (i.e., one instruction or less) without
+resorting to compiler intrinsics. Currently, most CPU architectures provide
+single instructions for a byte swap. For those that don't, falling back on
+existing operations is more than amenable. We should, however, endeavor to
+standardize existing practice.
+
+Note: The phrase one instruction or less refers to compilers inserting at
+      most one instruction, and at the very least removing any instructions
+      due to optimizations.
+
+# Design Considerations # {#design}
+
+The design for the byteswap free function is quite simple. It takes any
+integer type whose byte order (as opposed to bit order) is that of an even
+number (i.e., `N % 2 == 0`). Additionally, it *only* takes integer types,
+requiring users to openly `bit_cast` their non-integers to integers in blatant
+heresy to the Worm-Seethe. How utterly disgraceful.
+
+Note: It is intended that the byteswap function, despite swapping bytes, be
+placed into the `<bit>` header.
+
+## Synopsis ## {#design-synopsis}
+
+The function's full specification is:
+
+```c++
+namespace std {
+    template <class IntegerType>
+    constexpr IntegerType byteswap (IntegerType value) noexcept;
+}
+```
+
+Where `std::is_integral_v<IntegerType>` is `true`, and
+`sizeof(IntegerType) % 2 == 0` is `true`.
+
+# Wording # {#wording}
+
+The following is wording for the library section.
+
+<ins>
+<xmp highlight="c++">
+namespace std {
+    template <class IntegerType>
+    constexpr IntegerType byteswap (IntegerType value) noexcept;
+}
+</xmp>
+
+<ol>
+<li>*Remarks*
+  This function shall not participate in overload resolution unless:
+  <ul>
+    <li>`std::is_integral_v<IntegerType>` is `true`;</li>
+    <li>`sizeof(IntegerType) % 2 == 0` is `true`;</li>
+  </ul>
+</li>
+<li>*Returns*
+
+    An object of type `IntegerType` whose representation is in the reverse
+    order of the object representation of `value`.
+</li>
+</ol>
+</ins>
+
+Feature testing {#feature-test}
+---------------
+
+The `__cpp_lib_byteswap` feature test macro should be added.
+
+Acknowledgement {#acknowledge}
+===============
+
+Thanks to Nicole Muzzuca for feedback on writing this proposal.
