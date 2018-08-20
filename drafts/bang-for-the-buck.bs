@@ -3,12 +3,13 @@ Markup Shorthands: markdown yes
 Group: WG21
 Status: D
 Shortname: DXXXX
+Revision: 0
 Audience: EWG
-Title: Legal Tender: Making `$` a valid identifier
+Title: Bang For The Buck
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
 URL:
 Date: 2018-07-15
-Abstract: The `$` character is well known and well use throughout the
+Abstract: The `$` character is well known and well used throughout the
 Abstract: programming world. We should permit its use in user identifiers.
 </pre>
 

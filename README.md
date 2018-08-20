@@ -14,4 +14,26 @@ the drafts directory and do not have a number. Once assigned a number, they are
 moved to the proposals directory, and the file is renamed to the proposal
 number (note: the revision is *not* part of the filename)
 
+# Current Drafts
+
+ * [Rage Against the Abstract Machine]()
+ * [86 Most Types (From Exceptions)]()
+ * [Byteswapping For Fun and Profit](https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fAvW7)
+ * [Safe Namespace for Proposals]()
+ * [Expanding Upon Subscripting]()
+ * [offsetof For the Modern Era]()
+ * [Harken the Night-Shrivers]()
+ * [Ceci N'est Pas Une Pipe]()
+ * [Integer Width Literals]()
+ * [Feature Presentation]()
+ * [A Bang For The Buck]()
+ * [std::bag of Tricks]()
+ * [Sharing is Caring]()
+ * [Desert Sessions]()
+ * [Hashtag Blessed]()
+ * [std::breakpoint]()
+ * [Void Main]()
+ * [VFS]()
+<!-- * [Subtuples and Domtuples]() -->
+
 [1]: https://github.com/tabatkins/bikeshed
