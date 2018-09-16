@@ -1,0 +1,29 @@
+<pre class="metadata">
+Markup Shorthands: markdown yes
+Group: WG21
+Status: D
+Shortname: DXXXX
+Revision: 0
+Audience: LEWG, SG15, SG16
+Title: Desert Sessions: Improving hostile environment interactions
+Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
+URL:
+Date: 2018-07-15
+Abstract: Working with environment variables and command line arguments is
+painful, platform specific, and lacking a modern C++ touch.
+</pre>
+
+# Motivation # {#motivation}
+
+Environment variables are an important aspect of modern systems. Yet, as of
+right now, C and C++ lack a standardized way to iterate through all current
+environment variables. An interface to iterate, get, set, erase, and modify
+environment variables, as well as providing familiar syntax found in other
+programming languages is needed.
+
+Additionally, accessing command line arguments when `main()` is outside of
+your control is currently not possible. Instead, objects must be initialized
+inside of `main()`, or global variables must be initialized once `main()` has
+started. This is such a strange approach compared to most other languages,
+especially due to command line arguments existing for the duration of a
+programs life.

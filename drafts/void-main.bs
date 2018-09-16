@@ -1,0 +1,29 @@
+<pre class="metadata">
+Markup Shorthands: markdown yes
+Group: WG21
+Status: D
+Shortname: DXXXX
+Audience: EWG
+Title: Void Main
+Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
+URL: 
+Date: 2018-07-15
+Abstract: `int main ()` is a confusing, bizarre, and harrowing introduction as
+Abstract: an entry point into C++. It confuses newcomers alike, and violates
+Abstract: our own basic best practices. It's time we quit this and just make
+Abstract: the option to have main return void part of the language.
+</pre>
+
+# Motivation # {#motivation}
+
+Main is a sweet special little boy in C++. It has interesting properties
+regarding exceptions, noreturn functions, the optional `argv` doesn't work like
+most think it might and it even lets us ignore the return type entirely.
+And yet, this is the function we introduce to beginners from day one.
+This magic, bizarre, entry point to our programs is a nightmare for anyone
+wanting to write correct, true, and most importantly *safe* code. This proposal
+attempts to solve this, while also standardizing existing extensions *and*
+archaic literature and examples.
+
+This paper currently works in tandem with the Desert Sessions proposal, which
+attempts to solve a new

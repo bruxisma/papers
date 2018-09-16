@@ -1,0 +1,37 @@
+<pre class="metadata">
+Markup Shorthands: markdown yes
+Group: WG21
+Status: D
+Shortname: DXXXX
+Audience: All
+Title: Harken the Night-Shriver!
+Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
+Date: 2018-07-15
+URL:
+Abstract: Hark! The Elder Freemen's obsessions with archaic stories about boats
+Abstract: will hasten Quickentide and bring this committee to Bloodruin!
+</pre>
+
+# The Night-Shrivers Cometh
+
+Lo! There is a great many inventions on the horizon for our council and its
+members which once disseminated to the public will uplift ourselves into a new
+age, one that can fight off the collapse that has thus taken various societies
+to date. One could merely gaze at the abandoned archive of APL, the sullen
+stench of Simula, or the putrid puss of PL/1. But in actuality, we can simply
+convene a committee to peer into the Cavern of Cobol, a slithering den of
+destitute destruction, laid waste by Quickentide, whose survivors must live
+through a never ending Bloodruin built on the backs of bubonic bodies that have
+fallen before them, bound to a future with no hope or conveyance of a better
+choice. Theirs is a lesson to be learned.
+
+Quickentide is the death of all things, an apocalypse of an industry. Of a
+community. It brings Bloodruin, a guarantee that a language will survive, but
+merely as a shell of itself.
+
+# Gatekeepers Hold All Power
+
+The Gate Keepers continue to ignore the threat of Rot, a force that fights
+the progressive desires of the council, and instead enact the very will of it.
+They do not keep out what is worst for the community. They throw out what they
+do not desire. 
