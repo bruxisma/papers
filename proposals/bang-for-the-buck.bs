@@ -1,16 +1,18 @@
 <pre class="metadata">
 Markup Shorthands: markdown yes
 Group: WG21
-Status: D
-Shortname: DXXXX
+Status: P
+Shortname: P1274
 Revision: 0
 Audience: EWG
 Title: Bang For The Buck
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
 URL:
 Date: 2018-07-15
-Abstract: The `$` character is well known and well used throughout the
-Abstract: programming world. We should permit its use in user identifiers.
+Abstract: We should give C++ programmers the ability to use additional
+Abstract: characters in identifiers
+!Current Render:
+!Current Source: <a href="">slurps-mad-rips/papers/proposals/bang-for-the-buck.bs</a>
 </pre>
 
 # Motivation # {#motivation}

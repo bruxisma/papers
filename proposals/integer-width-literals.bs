@@ -12,7 +12,7 @@ Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
 Date: 2018-10-05
 URL: https://wg21.link/P1280R0
 !Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fx3gF">P1280R0</a>
-!Current Source: <a href="https://git.io/fx3gX">slurps-mad-rips/papers/proposals/p1280.bs</a>
+!Current Source: <a href="https://git.io/fx3gX">slurps-mad-rips/papers/proposals/integer-width-literals.bs</a>
 </pre>
 
 # Revision History # {#changelog}
@@ -80,10 +80,9 @@ namespace std::inline literals::inline integer_literals {
 </xmp>
 
 <ol>
-<li>*Remarks*
+<li>*Constraints*
 
-  `arg` must fit in the range to `numeric_limits<uint64_t>::min() <= arg <=
-  numeric_limits<uint64_t>::max()`
+  `arg` must fit in the range to `arg <= numeric_limits<uint64_t>::max()`
 </li>
 <li>*Returns*
 
@@ -99,10 +98,9 @@ namespace std::inline literals::inline integer_literals {
 </xmp>
 
 <ol>
-<li>*Remarks*
+<li>*Constraints*
 
-  `arg` must fit in the range to `numeric_limits<uint32_t>::min() <= arg <=
-  numeric_limits<uint32_t>::max()`
+  `arg` must fit in the range to `arg <= numeric_limits<uint32_t>::max()`
 </li>
 <li>*Returns*
 
@@ -118,10 +116,9 @@ namespace std::inline literals::inline integer_literals {
 </xmp>
 
 <ol>
-<li>*Remarks*
+<li>*Constraints*
 
-  `arg` must fit in the range to `numeric_limits<uint16_t>::min() <= arg <=
-  numeric_limits<uint16_t>::max()`
+  `arg` must fit in the range to `arg <= numeric_limits<uint16_t>::max()`
 </li>
 <li>*Returns*
 
@@ -137,10 +134,9 @@ namespace std::inline literals::inline integer_literals {
 </xmp>
 
 <ol>
-<li>*Remarks*
+<li>*Constraints*
 
-  `arg` must fit in the range to `numeric_limits<uint8_t>::min() <= arg <=
-  numeric_limits<uint8_t>::max()`
+  `arg` must fit in the range to `arg <= numeric_limits<uint8_t>::max()`
 </li>
 <li>*Returns*
 
@@ -155,10 +151,9 @@ namespace std::inline literals::inline integer_literals {
 </xmp>
 
 <ol>
-<li>*Remarks*
+<li>*Constraints*
 
-  `arg` must fit in the range to `numeric_limits<int64_t>::min() <= arg <=
-  numeric_limits<int64_t>::max()`
+  `arg` must fit in the range to `arg <= numeric_limits<int64_t>::max()`
 </li>
 <li>*Returns*
 
@@ -173,10 +168,9 @@ namespace std::inline literals::inline integer_literals {
 </xmp>
 
 <ol>
-<li>*Remarks*
+<li>*Constraints*
 
-  `arg` must fit in the range to `numeric_limits<int32_t>::min() <= arg <=
-  numeric_limits<int32_t>::max()`
+  `arg` must fit in the range to `arg <= numeric_limits<int32_t>::max()`
 </li>
 <li>*Returns*
 
@@ -191,10 +185,9 @@ namespace std::inline literals::inline integer_literals {
 </xmp>
 
 <ol>
-<li>*Remarks*
+<li>*Constraints*
 
-  `arg` must fit in the range to `numeric_limits<int16_t>::min() <= arg <=
-  numeric_limits<int16_t>::max()`
+  `arg` must fit in the range to `arg <= numeric_limits<int16_t>::max()`
 </li>
 <li>*Returns*
 
@@ -209,10 +202,9 @@ namespace std::inline literals::inline integer_literals {
 </xmp>
 
 <ol>
-<li>*Remarks*
+<li>*Constraints*
 
-  `arg` must fit in the range to `numeric_limits<int8_t>::min() <= arg <=
-  numeric_limits<int8_t>::max()`
+  `arg` must fit in the range to `arg <= numeric_limits<int8_t>::max()`
 </li>
 <li>*Returns*
 
