@@ -58,7 +58,7 @@ namespace std::inline literals::inline integer_literals {
   constexpr uint64_t operator ""u64 (unsigned long long arg);
   constexpr uint32_t operator ""u32 (unsigned long long arg);
   constexpr uint16_t operator ""u16 (unsigned long long arg);
-  constexpr uint8_t operator "" u8 (unsigned long long arg);
+  constexpr uint8_t operator ""u8 (unsigned long long arg);
 
   constexpr int64_t operator ""i64 (unsigned long long arg);
   constexpr int32_t operator ""i32 (unsigned long long arg);
@@ -219,9 +219,6 @@ namespace std::inline literals::inline integer_literals {
     An integer of type `int8_t` with the value given in `arg`
 </li>
 </ol>
-
-
-
 
 </ins>
 

@@ -75,7 +75,7 @@ namespace std {
 </xmp>
 
 <ol>
-<li>*Remarks*
+<li>*Requires*
   This function shall not participate in overload resolution unless:
   <ul>
     <li>`std::is_integral_v<IntegerType>` is `true`</li>
