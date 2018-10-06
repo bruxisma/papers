@@ -75,7 +75,7 @@ namespace std {
 </xmp>
 
 <ol>
-<li>*Requires*
+<li>*Constraints*
   This function shall not participate in overload resolution unless:
   <ul>
     <li>`std::is_integral_v<IntegerType>` is `true`</li>
@@ -89,7 +89,7 @@ namespace std {
 </ol>
 </ins>
 
-## Feature testing ## {#feature-test}
+## Feature Testing ## {#feature-test}
 
 The `__cpp_lib_byteswap` feature test macro should be added.
 
