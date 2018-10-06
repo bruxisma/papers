@@ -7,13 +7,19 @@ Revision: 0
 Audience: EWG
 Title: Bang For The Buck
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
-URL:
+URL: https://wg21.link/p1274r0
 Date: 2018-07-15
 Abstract: We should give C++ programmers the ability to use additional
 Abstract: characters in identifiers
-!Current Render:
-!Current Source: <a href="">slurps-mad-rips/papers/proposals/bang-for-the-buck.bs</a>
+!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsv8">P1274R0</a>
+!Current Source: <a href="https://git.io/fxsvW">slurps-mad-rips/papers/proposals/bang-for-the-buck.bs</a>
 </pre>
+
+# Revision History # {#changelog}
+
+## Revision 0 ## {#r0}
+
+Initial Release 🎉
 
 # Motivation # {#motivation}
 
@@ -21,10 +27,134 @@ Despite the vast number of characters now alloted to the C++ standard regarding
 identifiers, the one character that is continually seen in extensions is the
 ASCII character `$`. While some want to permit this as an operator `reflexpr`,
 it is the author's opinion that it makes more sense to permit it as an
-identifier in functions, namespaces, and classes, and variables.
+identifier in functions, namespaces, classes, and variables.
 
 While there are some concerns regarding permitting its use in identifiers,
 this paper does layout a solution for vendors who have supported this extension
 on some platforms up until now, while also laying a foundation for future
 characters that exist on all keyboards but might cause linker issues with
 older platforms.
+
+Additionally, this paper seeks to permit adding both the `!` and `?` tokens at
+the end of member functions. This would permit calls such as `ptr.reset!()`,
+and `vector.empty?()`, which could be used to reduce confusion when a function
+might be a modifier vs an observer.
+
+# Design # {#design}
+
+While several vendors have permitted the use of the `$` in the past, it is not
+able to be supported on all platforms due to linker requirements. While the C++
+standard does not have a true notion of "a linker", there is still the reality
+that at the end of the day we need to combine our translation units into
+*something*. Because of this, this paper takes a unique route for representing
+the `$` in sources. Effectively, we do not add `$` to the basic source
+character set. Instead, we permit the preprocessor during the 1st phase of
+translation to turn the `$` into its *universal-character-name*, thus rendering
+it into the value `\u0024`. Current implementations are then free to mangle the
+resulting identifier as though it were a unicode character. For platforms that
+have supported `$` as an extension, they are free to generate symbols for both
+the unicode and `$` literal character.
+
+Both `!` and `?` are part of the *basic-execution-set* and therefore are being
+repurposed for this specific identifier location.
+
+# Wording # {#wording}
+
+All wording is relative to [[N4762]]
+
+## ! and ? ## {#wording-interrobang}
+
+Insert into 5.10 Identifiers [**lex.name**]
+
+: *identifier*
+:: *identifier-nondigit*
+:: *identifier* *identifier-nondigit*
+:: *identifier* *digit*
+: <ins>*identifier-special*:</ins>
+:: <ins>*identifier* *identifier-special-char*</ins>
+: <ins>*identifier-special-char*: one of</ins>
+:: <ins>**!** **?**</ins>
+
+## $ ## {#wording-buck}
+
+Insert into Table 2 in 5.10 Identifiers [**lex.name**]
+
+<table class="tg">
+  <tr>
+    <td><ins>0024</ins></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>00A8</td>
+    <td>00AA</td>
+    <td>00AD</td>
+    <td>00AF<br></td>
+    <td>00B2-00B5</td>
+  </tr>
+  <tr>
+    <td>00B7-00BA</td>
+    <td>00BC-00BE</td>
+    <td>00C0-00D6</td>
+    <td>00D8-00F6<br></td>
+    <td>00F8-00FF</td>
+  </tr>
+  <tr>
+    <td>0100-167F</td>
+    <td>1681-180D</td>
+    <td>180F-1FFF<br></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>200B-200D</td>
+    <td>202A-202E</td>
+    <td>203F-2040</td>
+    <td>2054</td>
+    <td>2060-206F</td>
+  </tr>
+  <tr>
+    <td>2070-218F</td>
+    <td>2460-24FF</td>
+    <td>2776-2793</td>
+    <td>2C00-2DFF</td>
+    <td>2E80-2FFF</td>
+  </tr>
+  <tr>
+    <td>3004-3007</td>
+    <td>3021-302F</td>
+    <td>3031-D7FF</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>F900-FD3D</td>
+    <td>FD40-FDCF</td>
+    <td>FDF0-FE44</td>
+    <td>FE47-FFFD</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>10000-1FFFD</td>
+    <td>20000-2FFFD</td>
+    <td>30000-3FFFD</td>
+    <td>40000-4FFFD</td>
+    <td>50000-5FFFD</td>
+  </tr>
+  <tr>
+    <td>60000-6FFFD</td>
+    <td>70000-7FFFD</td>
+    <td>80000-8FFFD</td>
+    <td>90000-9FFFD</td>
+    <td>A0000-AFFFD<br></td>
+  </tr>
+  <tr>
+    <td>B0000-BFFFD</td>
+    <td>C0000-CFFFD</td>
+    <td>D0000-DFFFD</td>
+    <td>E0000-EFFFD</td>
+    <td></td>
+  </tr>
+</table>
