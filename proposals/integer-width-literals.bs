@@ -238,7 +238,6 @@ The `__cpp_lib_integer_literals` feature test macro should be added.
     ],
     "href": "https://wg21.link/p0330r2",
     "title": "Literal Suffixes for ptrdiff_t and size_t",
-    "status": "P"
   }
 }
 </pre>
