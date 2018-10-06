@@ -1,0 +1,103 @@
+<pre class="metadata">
+Markup Shorthands: markdown yes
+Group: WG21
+Status: P
+Shortname: P1276
+Revision: 0
+Audience: EWG
+Title: Void Main
+Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
+URL: https://wg21.link/p1276r0
+Date: 2018-09-15
+Abstract: The current entrypoint for C++ is bizarre, special cased, and
+Abstract: violates our own best practices. Let's make void a valid return type
+Abstract: for main.
+!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsmz">P1276R0</a>
+!Current Source: <a href="https://git.io/fxsmu">slurps-mad-rips/papers/proposals/void-main.bs</a>
+</pre>
+<style>
+ins  {background-color: #CCFFCC; text-decoration: underline;}
+del  {background-color: #FFCACA; text-decoration: line-through;}
+</style>
+
+# Revision History # {#changelog}
+
+## Revision 0 ## {#r0}
+
+Initial Release 🎉
+
+# Motivation # {#motivation}
+
+Main is a sweet special little gremlin in C++. It has interesting properties
+regarding exceptions and noreturn functions, `argv` is actually deprecated on
+some unicode aware platforms and it even lets us ignore the return type
+entirely. And yet, this is the function we introduce to beginners from day one.
+This magic, bizarre, entry point to our programs is a nightmare. This proposal
+attempts to solve this, while also standardizing existing extensions *and*
+archaic literature and examples.
+
+This paper currently works in tandem with the [[p1275|Desert Sessions]]
+proposal, which attempts to solve issues regarding `argv` and the lack of
+modern support for reading from environment variables. However, it is not a
+prerequisite of adding the [[p1275]] API into the standard, nor does [[p1275]]
+require that this paper be added to the standard.
+
+# Design # {#design}
+
+The idea behind `void main()` is to simply state that a `main()` that takes no
+arguments can choose to return nothing as well. Given that we currently permit
+this *with* the `int` returning main signatures this will not break existing
+code.
+
+
+# Wording # {#wording}
+
+All wording is relative to [[N4762]]
+
+In Section 6.8.3.1 `main` function [**basic.start.main**] paragraph 2, insert
+
+<blockquote>
+<sup>2</sup>An implementation shall not predefine the `main` function. This
+function shall not be overloaded. Its type shall have C++ language linkage and
+it have a declared return type of <ins>either</ins> type `int` <ins>or type
+`void`</ins>, but otherwise its type is implementation-defined. An
+implementation shall allow:
+
+<ol>
+  <li>
+    <ins><sup>(2.1)</sup>&mdash; a function of `()` returning `void` and</ins>
+  </li>
+  <li>
+    <del><sup>(2.1)</sup></del>
+    <ins><sup>(2.2)</sup></ins>
+    &mdash; a function of `()` returning `int` and
+  </li>
+  <li>
+    <del><sup>(2.2)</sup></del>
+    <ins><sup>(2.3)</sup></ins>
+    &mdash; a function of `(int`, pointer to pointer to `char)` returning `int`
+  </li>
+</ol>
+</blockquote>
+
+In paragraph 5, insert:
+
+<blockquote>
+<sup>5</sup>A `return` statement in `main` has the effect of leaving the main
+function (destroying any objects with automatic storage duration) and calling
+`std::exit` with the return value <ins>or `0` in the case of no return
+value</ins> as the argument. If control flows off the end of the
+*compound-statement* of `main`, the effect is equivalent to a `return` with
+operand `0` (see also 13.3) <ins>, or calling `std::exit(0)` once `main`'s
+scope has exited</ins>
+</blockquote>
+
+<pre class=biblio>
+{
+  "p1275": {
+    "authors": "Isabella Muerte",
+    "href": "https://wg21.link/p1275r0",
+    "title": "Desert Sessions: Improving Hostile Environment Interactions"
+  }
+}
+</pre>

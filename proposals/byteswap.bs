@@ -16,6 +16,10 @@ URL: https://wg21.link/P1272R0
 !Current Source: <a href="https://git.io/fx3l0">slurps-mad-rips/papers/proposals/byteswap.bs</a>
 !Implementation: <a href="https://git.io/fAvWz">slurps-mad-rips/byteswap</a>
 </pre>
+<style>
+ins  {background-color: #CCFFCC; text-decoration: underline;}
+del  {background-color: #FFCACA; text-decoration: line-through;}
+</style>
 
 # Revision History # {#changelog}
 

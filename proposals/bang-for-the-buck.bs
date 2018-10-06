@@ -14,6 +14,10 @@ Abstract: characters in identifiers
 !Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsv8">P1274R0</a>
 !Current Source: <a href="https://git.io/fxsvW">slurps-mad-rips/papers/proposals/bang-for-the-buck.bs</a>
 </pre>
+<style>
+ins  {background-color: #CCFFCC; text-decoration: underline;}
+del  {background-color: #FFCACA; text-decoration: line-through;}
+</style>
 
 # Revision History # {#changelog}
 
