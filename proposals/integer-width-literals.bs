@@ -11,7 +11,7 @@ Title: Integer Width Literals
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
 Date: 2018-10-05
 URL: https://wg21.link/P1280R0
-!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fx3g1">P1280R0</a>
+!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fx3gF">P1280R0</a>
 !Current Source: <a href="https://git.io/fx3gX">slurps-mad-rips/papers/proposals/p1280.bs</a>
 </pre>
 
