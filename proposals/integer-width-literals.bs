@@ -1,0 +1,244 @@
+<pre class='metadata'>
+Markup Shorthands: markdown yes
+No Abstract: yes
+Toggle Diffs: yes
+Group: WG21
+Status: P
+Shortname: P1280
+Revision: 0
+Audience: LEWG
+Title: Integer Width Literals
+Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
+Date: 2018-10-05
+URL: https://wg21.link/P1280R0
+!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fx3g1">P1280R0</a>
+!Current Source: <a href="https://git.io/fx3gX">slurps-mad-rips/papers/proposals/p1280.bs</a>
+</pre>
+
+# Revision History # {#changelog}
+
+## Revision 0 ## {#r0}
+
+Initial Release 🎉
+
+# Motivation # {#motivation}
+
+Proposal [[p0330r2]] proposes literal suffixes for `ptrdiff_t` and `size_t`. In
+it, the question [[p0330r2#design-std-ints|
+What about the fixed/least/max (unsigned) int types?]] is given regarding the
+fixed/least/max integer types provided by `<cstdint>`. As that paper has
+decided to focus exclusively on `ptrdiff_t` and `size_t`, this proposal will
+instead focus on the *fixed* width integer literals. The problem of least/max
+literals is left for another time and paper.
+
+Note: The author is more than willing to extend this paper's scope for the
+least and max integer types, however the fixed width integer literals show
+promise of the least complex changes and a low chance of ambiguity.
+
+# Design # {#design}
+
+The design for these literals suffixes is to permit explicitly sized
+expressions when writing integer literals (e.g., `123i32 + 12i16`).
+These operators are declared in the namespace `std::literals::integer_literals`
+where both `literals` and `integer_literals` are inline namespaces. Access to
+these operators can be gained with:
+
+ * `using namespace std::literals`
+ * `using namespace integer_literals`
+ * `using namespace std::literals::integer_literals`.
+
+It is intended that these operators be placed into the `<cstdint>` header.
+
+## Synopsis ## {#design-synopsis}
+
+The operator's full specification is:
+
+```c++
+namespace std::inline literals::inline integer_literals {
+  constexpr uint64_t operator ""u64 (unsigned long long arg);
+  constexpr uint32_t operator ""u32 (unsigned long long arg);
+  constexpr uint16_t operator ""u16 (unsigned long long arg);
+  constexpr uint8_t operator "" u8 (unsigned long long arg);
+
+  constexpr int64_t operator ""i64 (unsigned long long arg);
+  constexpr int32_t operator ""i32 (unsigned long long arg);
+  constexpr int16_t operator ""i16 (unsigned long long arg);
+  constexpr int8_t operator ""i8 (unsigned long long arg);
+}
+```
+
+# Wording # {#wording}
+
+The following is wording for the library section.
+
+<ins>
+<!-- u64 -->
+<xmp highlight="c++">
+namespace std::inline literals::inline integer_literals {
+    constexpr uint64_t operator ""u64 (unsigned long long arg);
+}
+</xmp>
+
+<ol>
+<li>*Remarks*
+
+  `arg` must fit in the range to `numeric_limits<uint64_t>::min() <= arg <=
+  numeric_limits<uint64_t>::max()`
+</li>
+<li>*Returns*
+
+    An integer of type `uint64_t` with the value given in `arg`
+</li>
+</ol>
+
+<!-- u32 -->
+<xmp highlight="c++">
+namespace std::inline literals::inline integer_literals {
+    constexpr uint32_t operator ""u32 (unsigned long long arg);
+}
+</xmp>
+
+<ol>
+<li>*Remarks*
+
+  `arg` must fit in the range to `numeric_limits<uint32_t>::min() <= arg <=
+  numeric_limits<uint32_t>::max()`
+</li>
+<li>*Returns*
+
+    An integer of type `uint32_t` with the value given in `arg`
+</li>
+</ol>
+
+<!-- u16 -->
+<xmp highlight="c++">
+namespace std::inline literals::inline integer_literals {
+    constexpr uint16_t operator ""u16 (unsigned long long arg);
+}
+</xmp>
+
+<ol>
+<li>*Remarks*
+
+  `arg` must fit in the range to `numeric_limits<uint16_t>::min() <= arg <=
+  numeric_limits<uint16_t>::max()`
+</li>
+<li>*Returns*
+
+    An integer of type `uint16_t` with the value given in `arg`
+</li>
+</ol>
+
+<!-- u8 -->
+<xmp highlight="c++">
+namespace std::inline literals::inline integer_literals {
+    constexpr uint8_t operator ""u8 (unsigned long long arg);
+}
+</xmp>
+
+<ol>
+<li>*Remarks*
+
+  `arg` must fit in the range to `numeric_limits<uint8_t>::min() <= arg <=
+  numeric_limits<uint8_t>::max()`
+</li>
+<li>*Returns*
+
+    An integer of type `uint8_t` with the value given in `arg`
+</li>
+</ol>
+
+<xmp highlight="c++">
+namespace std::inline literals::inline integer_literals {
+    constexpr int64_t operator ""i64 (unsigned long long arg);
+}
+</xmp>
+
+<ol>
+<li>*Remarks*
+
+  `arg` must fit in the range to `numeric_limits<int64_t>::min() <= arg <=
+  numeric_limits<int64_t>::max()`
+</li>
+<li>*Returns*
+
+    An integer of type `int64_t` with the value given in `arg`
+</li>
+</ol>
+
+<xmp highlight="c++">
+namespace std::inline literals::inline integer_literals {
+    constexpr int32_t operator ""i32 (unsigned long long arg);
+}
+</xmp>
+
+<ol>
+<li>*Remarks*
+
+  `arg` must fit in the range to `numeric_limits<int32_t>::min() <= arg <=
+  numeric_limits<int32_t>::max()`
+</li>
+<li>*Returns*
+
+    An integer of type `int32_t` with the value given in `arg`
+</li>
+</ol>
+
+<xmp highlight="c++">
+namespace std::inline literals::inline integer_literals {
+    constexpr int16_t operator ""i16 (unsigned long long arg);
+}
+</xmp>
+
+<ol>
+<li>*Remarks*
+
+  `arg` must fit in the range to `numeric_limits<int16_t>::min() <= arg <=
+  numeric_limits<int16_t>::max()`
+</li>
+<li>*Returns*
+
+    An integer of type `int16_t` with the value given in `arg`
+</li>
+</ol>
+
+<xmp highlight="c++">
+namespace std::inline literals::inline integer_literals {
+    constexpr int8_t operator ""i8 (unsigned long long arg);
+}
+</xmp>
+
+<ol>
+<li>*Remarks*
+
+  `arg` must fit in the range to `numeric_limits<int8_t>::min() <= arg <=
+  numeric_limits<int8_t>::max()`
+</li>
+<li>*Returns*
+
+    An integer of type `int8_t` with the value given in `arg`
+</li>
+</ol>
+
+
+
+
+</ins>
+
+## Feature Testing ## {#feature-test}
+
+The `__cpp_lib_integer_literals` feature test macro should be added.
+
+<pre class=biblio>
+{
+  "p0330r2": {
+    "authors": [
+      "JeanHeyd Meneide",
+      "Rein Halbersma"
+    ],
+    "href": "https://wg21.link/p0330r2",
+    "title": "Literal Suffixes for ptrdiff_t and size_t",
+    "status": "P"
+  }
+}
+</pre>

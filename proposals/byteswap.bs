@@ -1,18 +1,19 @@
 <pre class='metadata'>
 Markup Shorthands: markdown yes
 No Abstract: yes
+Toggle Diffs: yes
 Group: WG21
-Status: D
-Shortname: DXXXX
+Status: P
+Shortname: P1272
 Revision: 0
 Audience: SG6, SG14, LEWG
-Title: Byteswapping for fun and profit
+Title: Byteswapping for fun&&nuf
 Editor: Isabella Muerte, Target, isabella.muerte@target.com
 Date: 2018-07-12
 Repository: slurps-mad-rips/byteswap
-URL: https://wg21.link/DXXXXR0
-!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fAvW7">DXXXXR0</a>
-!Current Source: <a href="https://git.io/fAvWL">slurps-mad-rips/papers/drafts/byteswap.bs</a>
+URL: https://wg21.link/P1272R0
+!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fx3lR">P1272R0</a>
+!Current Source: <a href="https://git.io/fx3l0">slurps-mad-rips/papers/proposals/byteswap.bs</a>
 !Implementation: <a href="https://git.io/fAvWz">slurps-mad-rips/byteswap</a>
 </pre>
 
@@ -40,10 +41,10 @@ Note: The phrase one instruction or less refers to compilers inserting at
 # Design Considerations # {#design}
 
 The design for the byteswap free function is quite simple. It takes any
-integer type whose byte order (as opposed to bit order) is that of an even
-number (i.e., `N % 2 == 0`). Additionally, it *only* takes integer types,
-requiring users to openly `bit_cast` their non-integers to integers in blatant
-heresy to the Worm-Seethe. How utterly disgraceful.
+integer type and swaps its byteorder to the reverse of its current state.
+Additionally, it *only* takes integer types, requiring users to openly
+`bit_cast` their non-integers to integers in blatant heresy to the Worm-Seethe.
+How utterly disgraceful.
 
 Note: It is intended that the byteswap function, despite swapping bytes, be
 placed into the `<bit>` header.
@@ -59,8 +60,7 @@ namespace std {
 }
 ```
 
-Where `std::is_integral_v<IntegerType>` is `true`, and
-`sizeof(IntegerType) % 2 == 0` is `true`.
+Where `std::is_integral_v<IntegerType>` is `true`.
 
 # Wording # {#wording}
 
@@ -78,8 +78,7 @@ namespace std {
 <li>*Remarks*
   This function shall not participate in overload resolution unless:
   <ul>
-    <li>`std::is_integral_v<IntegerType>` is `true`;</li>
-    <li>`sizeof(IntegerType) % 2 == 0` is `true`;</li>
+    <li>`std::is_integral_v<IntegerType>` is `true`</li>
   </ul>
 </li>
 <li>*Returns*
@@ -90,12 +89,11 @@ namespace std {
 </ol>
 </ins>
 
-Feature testing {#feature-test}
----------------
+## Feature testing ## {#feature-test}
 
 The `__cpp_lib_byteswap` feature test macro should be added.
 
-Acknowledgement {#acknowledge}
-===============
+# Acknowledgement # {#acknowledgement}
 
 Thanks to Nicole Muzzuca for feedback on writing this proposal.
+
