@@ -62,8 +62,8 @@ unit tests, without having to bloat the final executable or library.
 
 Thus, the structure of a module interface unit will be as follows:
 
-1) Module interface partition
-2) `N` Optional inline module partitions
+  1. Module interface partition
+  2. `N` Optional inline module partitions
 
 When a module interface partition is imported, its corresponding inline module
 implementation partitions are imported up to the same *partition marker* as the
