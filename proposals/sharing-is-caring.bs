@@ -41,13 +41,14 @@ compiler vendor is extremely guilty of this. While the author doesn't want to
 name and shame, they will state that the name of the vendor in question starts
 with the letter "M" and ends in "icrosoft".
 
-This paper is similar to, but not a recreation of, [[P0276]]. While that paper
-attempted to specify all the possible traits available for visibility in
-regards to a shared library, this paper focuses entirely on interfaces exported
-via shared libraries. Additionally, we go one step further and limit this
-"sharing" to functions only. There are many issues that can arise from sharing
-a type over program boundaries and this paper is avoiding them. A future paper
-can argue in favor of expanding what foundation this proposal lays down now.
+This paper is extremely similar to, but not a recreation of, [[P0276]]. While
+that paper attempted to specify all the possible traits available for
+visibility in regards to a shared library, this paper focuses entirely on
+interfaces exported via shared libraries. Additionally, we go one step further
+and limit this "sharing" to functions only. There are many issues that can
+arise from sharing a type over program boundaries and this paper is avoiding
+them. A future paper can argue in favor of expanding what foundation this
+proposal lays down now.
 
 Note: The author is more than willing to pull this paper if every vendor would
 just behave and promise to namespace their compiler specific attributes so we
@@ -69,6 +70,7 @@ non-function entities.
 
 Wording is relative to [[N4762]]
 
+<blockquote>
 <ins>
 **9.11.12 Shared attribute [dcl.attr.shared]**
 
@@ -96,6 +98,7 @@ with the `shared` attribute in one translation unit and the same entity is
 declared without the `shared` attribute in another translation unit, the
 program is ill-formed.
 </ins>
+<blockquote>
 
 ## Feature Testing ## {#feature-testing}
 

@@ -1,0 +1,89 @@
+<pre class=metadata>
+Markup Shorthands: markdown yes
+Group: WG21
+Status: P
+Shortname: P1283
+Revision: 0
+Audience: SG14, LEWG
+Title: std::breakpoint
+Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
+URL: https://wg21.link/p1283r0
+Date: 2018-10-05
+Abstract: A builtin standard breakpoint function would aid in software
+Abstract: development
+!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsZ6">P1283</a>
+!Current Source: <a href="https://git.io/fxsZP">slurps-mad-rips/papers/proposals/breakpoint.bs</a>
+!Implementation: <a href="">slurps-mad-rips/breakpoint</a>
+</pre>
+<style>
+ins  {background-color: #CCFFCC; text-decoration: underline;}
+del  {background-color: #FFCACA; text-decoration: line-through;}
+</style>
+
+# Revision History # {#changelog}
+
+## Revision 0 ## {#r0}
+
+Initial Release 🎉
+
+# Motivation # {#motivation}
+
+Setting breakpoints inside of a debugger can be difficult and confusing for
+newcomers to C++. Rather than having to learn C++, they have to learn a special
+syntax just to place a breakpoint in the exact spot they want, or rely on the
+interface of an IDE. At the end of the day, a simple programmer just wants to
+place a breakpoint so that their program stops when under the watchful eye of a
+debuggger.
+
+This paper proposes a new function `std::breakpoint`, that causes a program to
+stop or "break" execution when it is being debugged.
+
+# Design # {#design}
+
+The goal of the `std::breakpoint` function is to "break" when being debugged
+but to act as though it is a no-op when it is executing normally. This might
+seem difficult in practice, but nearly every platform and various debuggers
+supports something to this effect. However, some platforms have caveats that
+make implementing this "break when being debugged" behavior hard to implement
+correctly.
+
+The `std::breakpoint` function is intended to go into the `<utility>` header.
+
+# FAQ # {#faq}
+
+## Couldn't this be implemented via contracts? ## {#faq-contracts}
+
+Possibly. However, a `std::breakpoint` function gives more fine grained control
+than "break on all contract violations".
+
+## How does this work with the upcoming stacktrace API? ## {#faq-stacktrace}
+
+It is not intended to interoperate with the stacktrace API at this time. Both
+the stacktrace API and `std::breakpoint` are essentially orthogonal in their
+focus and use. Whereas the former is for getting more information in the event
+of an error, `std::breakpoint` is intended to help programmers inspect the
+current state of a program at a breakpoint.
+
+# Wording # {#wording}
+
+Wording is relative to [[N4762]]
+
+<ins>
+<xmp highlight="c++">
+namespace std {
+  void breakpoint () noexcept;
+}
+</xmp>
+<ol>
+<li>*Remarks*
+
+    When this function is executed, it first must perform an implementation
+    defined check to see if the program is currently running under a debugger.
+    If it is, the program's execution is temporarily halted and execution is
+    handed to the debugger until such a time as:
+    
+     * the program is terminated by the debugger or,
+     * the debugger hands execution back to the program.
+</li>
+</ol>
+</ins>
