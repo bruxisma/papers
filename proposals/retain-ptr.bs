@@ -42,6 +42,7 @@ I'd like to thank the following:
  * Clarified section on addressof operator, now that `out_ptr` is being
     submitted
  * Removed `retain_ptr::unique` as it was removed from `shared_ptr` for C++20.
+ * Removed code example of implementing a `std::future`-like type.
  * Changed `retain_ptr::detach` to `retain_ptr::release`
  * Changed name of `retain_t` to `retain_object_t`
  * Changed atomicity of `atomic_reference_count` based on suggestions from
@@ -55,6 +56,7 @@ I'd like to thank the following:
     and `reinterpret_pointer_cast`.
  * Added deduction guides to bring `retain_ptr` in line with other smart
     pointers
+ * Added more code examples
 
 ## Revision 0 ## {#r0}
 
