@@ -11,7 +11,7 @@ Editor: Isabella Muerte, Target, isabella.muerte@target.com
 Date: 2018-09-27
 URL: https://wg21.link/p1282r0
 Abstract: Adding a workflow operator to C++ gives us the opportunity to solve
-Abstract: operator precedence for chaining ranges, executors, monads,
+Abstract: operator precedence for continuations on ranges, executors, monads,
 Abstract: coroutines, and anything else users might want.
 !Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsWc">P1282R0</a>
 !Current Source: <a href="https://git.io/fxsWC">slurps-mad-rips/papers/proposals/workflow-operator.bs</a>
@@ -31,7 +31,8 @@ Initial release. 🎉
 
 With the advent of Ranges, Executors, Coroutines, and monadic interfaces upon
 us for C++20, we have a unique opportunity to create a uniform workflow
-interface for expanding on each of the operations provided by the above types.
+interface for expanding on each of the operations provided by the
+aforementioned types.
 
 This paper proposes two operators, hereby dubbed the "workflow operators",
 because they are not pipes, but for workflows. These workflow operators are
@@ -39,6 +40,11 @@ represented with the characters `|>` and `<|`. If you are currently seeing two
 arrows on your screen, instead of a `|` and `>`/`<` combo, you probably are
 using a monospaced font with ligatures enabled. This paper does not recommend
 unicode specific characters.
+
+The plan is to define these operators' precedence such that they are above the
+comma operator, but below the compound assignment operators. This should,
+ideally, allow them to begin to be written in code with minimal interference
+needed.
 
 Currently, ranges and executors plan on overloading the `|` operator. This has
 unidirectional meaning, but more importantly has precedence in between the
@@ -84,15 +90,16 @@ those and more things must be taken into account.
 
 At present there is no plan, however someone will probably find a use for it 🙂
 
-In all seriousness, there are possible uses for it *if* (and only if) the
-workflow operators are extended to futures to encapsulate both `when_all`,
-`when_any` operations. However, with basic `|>` chaining, we get `when_all` and
-`.then` operations on futures if we desire to extend this to them.
+In all seriousness, there are possible uses for it *if* (and only if) C++ gets,
+perhaps, channels as found in languages such as Rust or golang. That said, the
+current `|>` and `<|` do not remove the need for, say, `when_all`, and
+`when_any` on futures or future-like types.
 
 ## Does this solve the same problem as UFCS? ## {#faq-ufcs}
 
 No. UFCS gets us one step closer to concept maps and uniform interfaces. This
-solves a different set of problems regarding operators.
+solves a different set of problems regarding operator precedence and extensible
+interfaces.
 
 ## Isn't this just UFCS? ## {#faq-ufcs2}
 
@@ -137,6 +144,84 @@ int total = view::iota(1)
 
 ## Monads ## {#examples-monad}
 
+The following code was provided by Simon Brand via his CppCon 2018 talk on
+monads. It has been slightly modified to cut down on length. It is a
+demonstration of how we can extend existing interfaces without having to modify
+existing syntax or creating a new DSL when interacting with standard (or soon
+to be standard) types. 
+
+Note: This code is, minus the use of `operator |>` valid C++17 code. With the
+addition of Concepts, we could theoretically further constrain what operations
+or interfaces can be flowed into a monadic type.
+
+```cpp
+template<typename T, typename E, typename L>
+auto map(std::expected<T, E> const& ex, L const& fun)
+  -> expected<decltype(fun(*ex)), E> {
+    if (ex) { return fun(*ex); }
+    return std::make_unexpected(ex.error());
+}
+
+template<typename T, typename E, typename L>
+expected<T, E> join (expected<T, E> const& ex, L const& fun) {
+  if (ex) { return *ex; }
+  return std::make_unexpected(ex.error());
+}
+
+template<typename T, typename E, typename L>
+auto and_then( expected<T, E> const& ex, L const& fun) {
+    return join(map(ex,fun));
+}
+
+namespace infix {
+
+template<typename T>
+struct map {
+    T t;
+    map(T const& t) : t(t) {}
+};
+
+template<typename T>
+struct and_then {
+    T t;
+    and_then(T const& t) : t(t) {}
+};
+
+template<typename T, typename E, typename L>
+auto operator|>(std::expected<T, E> const& ex, map const& fun) {
+    return ::map(ex, fun.t);
+}
+
+template<typename T, typename E, typename L>
+auto operator|>( std::expected<T, E> const& ex, map const& fun) {
+    return ::and_then(ex, fun.t);
+}
+
+} /* namespace infix */
+
+std::expected<int, string> divide (int numerator, int denominator) {
+  if (denominator == 0) { return std::make_unexpected( "divide by zero" ); }
+  return numerator / denominator;
+}
+
+std::expected<int, std::string> to_int(std::string const& s) {
+  if (s.empty()) { return std::make_unexpected("string was empty"s); }
+  int i;
+  auto result = from_chars(&s.front(), &s.back(), i);
+  if (result.ec or result.ptr != &s.back()) {
+    return std::make_unexpected("string did not contain an int"s);
+  }
+  return i;
+}
+
+int main() {
+  using namespace infix;
+  auto result = 
+    to_int("12")
+    |> and_then([] (int i) { return divide(42, i ); })
+    |> map([] (double d) { return d * 2; });
+```
+
 ## Coroutines And Executors ## {#examples-coroutine}
 
 The following code is modified regarding coroutines and its (possible)
@@ -172,3 +257,11 @@ Starts on executor `ex1`, resumes on executor `ex2`
 ```cpp
 co_await spawn(ex1) |> f |> via(ex2)
 ```
+
+# Acknowledgements # {#acknowledgements}
+
+Special thanks for Simon Brand for providing his source code. The encouragement
+of Simon Brand, Phil Nash, David Hollman, and countless others (I'm so sorry,
+there's a LOT of you and I can't remember all of you) to move forward with this
+paper after I originally suggested it in passing to Louis Dionne at CppCon
+2017.
