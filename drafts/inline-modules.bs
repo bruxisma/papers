@@ -4,6 +4,7 @@ Group: WG21
 Status: D
 Shortname: DXXXX
 Revision: 0
+Date: 2018-10-07
 Audience: EWG
 Title: Inline Module Partitions
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
