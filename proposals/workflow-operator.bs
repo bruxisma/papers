@@ -1,0 +1,174 @@
+<pre class='metadata'>
+Markup Shorthands: markdown yes
+Toggle Diffs: yes
+Group: WG21
+Status: P
+Shortname: P1282
+Revision: 0
+Audience: EWG
+Title: Ceci N'est Pas Une Pipe: Adding a workflow operator to C++ 
+Editor: Isabella Muerte, Target, isabella.muerte@target.com
+Date: 2018-09-27
+URL: https://wg21.link/p1282r0
+Abstract: Adding a workflow operator to C++ gives us the opportunity to solve
+Abstract: operator precedence for chaining ranges, executors, monads,
+Abstract: coroutines, and anything else users might want.
+!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsWc">P1282R0</a>
+!Current Source: <a href="https://git.io/fxsWC">slurps-mad-rips/papers/proposals/workflow-operator.bs</a>
+</pre>
+<style>
+ins  {background-color: #CCFFCC; text-decoration: underline;}
+del  {background-color: #FFCACA; text-decoration: line-through;}
+</style>
+
+# Revision History # {#changelog}
+
+## Revision 0 ## {#r0}
+
+Initial release. 🎉
+
+# Motivation # {#motivation}
+
+With the advent of Ranges, Executors, Coroutines, and monadic interfaces upon
+us for C++20, we have a unique opportunity to create a uniform workflow
+interface for expanding on each of the operations provided by the above types.
+
+This paper proposes two operators, hereby dubbed the "workflow operators",
+because they are not pipes, but for workflows. These workflow operators are
+represented with the characters `|>` and `<|`. If you are currently seeing two
+arrows on your screen, instead of a `|` and `>`/`<` combo, you probably are
+using a monospaced font with ligatures enabled. This paper does not recommend
+unicode specific characters.
+
+Currently, ranges and executors plan on overloading the `|` operator. This has
+unidirectional meaning, but more importantly has precedence in between the
+"bitwise xor" (`^`) and "logcal and" (`and`) operators. This can cause odd
+and unexpected behavior. One could argue that overloading `>>` and `<<` was a
+mistake at the time. Perhaps we should take the opportunity to not repeat the
+same type of mistake.
+
+Adding these operators has specific consequences, namely we don't need a paper
+everytime someone wants to add some kind of monadic operation to
+`std::optional`, `std::expected/outcome` or similar monadic types. In the past,
+people such as Ben Deane and Simon Brand, have spoken that the best operator we
+can get for proper binding is to use `>>`. However, its precedence means that
+we actually have to use `>>=`. Instead of overloading *that* operator, why
+don't we overload `|>` instead?
+
+We also would now have an operator that binds correctly when chaining
+coroutines. Because `co_await` (or whatever possible glyphs the committee
+chooses) binds so tightly, we are currently unable to safely chain coroutines
+in continuations without having to rely on member functions, or passing said
+coroutines into another function to be executed later.
+
+While it is asking *a lot* to add more operators into C++20, the author
+believes that this is an important requirement for composable and extensible
+interfaces regarding the aforementioned executors, ranges, coroutines, monads,
+and possibly even more interfaces.
+
+# FAQ # {#faq}
+
+## Does this have use beyond the stated examples so far? ## {#faq-uses}
+
+Several people on the cpplang slack channel have mentioned that it would be
+useful for function composition and binding, as well as a possible "infix"
+operator.
+
+## Does this work like the `|>` operator from `F#`? ## {#faq-fsharp}
+
+The syntax is taken from F#, however the semantics differ greatly due to F#
+being a garbage collected language, and an ML. C++ however is not either of
+those and more things must be taken into account.
+
+## Are there any plans to add `<|>` to this set of operators? ## {#faq-more}
+
+At present there is no plan, however someone will probably find a use for it 🙂
+
+In all seriousness, there are possible uses for it *if* (and only if) the
+workflow operators are extended to futures to encapsulate both `when_all`,
+`when_any` operations. However, with basic `|>` chaining, we get `when_all` and
+`.then` operations on futures if we desire to extend this to them.
+
+## Does this solve the same problem as UFCS? ## {#faq-ufcs}
+
+No. UFCS gets us one step closer to concept maps and uniform interfaces. This
+solves a different set of problems regarding operators.
+
+## Isn't this just UFCS? ## {#faq-ufcs2}
+
+No. UFCS has different semantics and requirements. This is just a regular old
+operator users and library implementors can utilize to create extensible
+interfaces with minimal interference into the way we write code.
+
+## I dunno, seems like UFCS to me ## {#faq-ufcs3}
+
+It's not UFCS. We have a new operator in C++20 (`<=>`). We still don't have
+UFCS. This isn't UFCS. Stop saying it's UFCS. *It's not UFCS*.
+
+## OK, it's just that it looks like its UFCS ## {#faq-ufcs4}
+
+No.
+
+# Examples # {#examples}
+
+The following examples show ranges, coroutines, and monad operations when
+chaining operations via the workflow operators.
+
+## Ranges ## {#examples-range}
+
+The following is taken (and modified) from the original ranges v3 draft
+
+```cpp
+int total = accumulate { 0 } <| view::iota(1)
+                             |> view::transform([](int x){return x*x;})
+                             |> view::take(10);
+```
+
+In the above we create a range on the righthand side of `<|` and then pass this
+in to our imaginary accumulate type that takes a range after being initialized
+with its initial value. This could also technically be written as
+
+```cpp
+int total = view::iota(1)
+            |> view::transform([](int x){return x*x;})
+            |> view::take(10)
+            |> accumulate(0);
+```
+
+## Monads ## {#examples-monad}
+
+## Coroutines And Executors ## {#examples-coroutine}
+
+The following code is modified regarding coroutines and its (possible)
+interactions with executors found in [[p1056r0]]. While this code may not seem
+very explanatory, the interaction between coroutines and executors is still not
+well defined. However, unlike the need to implement `.via` as a member function
+and having to "await" any changes if newer and better interfaces are found,
+users are free to implement their own interfaces on `task<T>`, coroutine types,
+executors, or a combination of them.
+
+Recall, however, that a coroutine *starts* suspended and it is up to the user
+to decide how it is executed and where its continuation is placed.
+
+### Case 2 ### {#examples-coroutine-2}
+
+```cpp
+co_await f() |> via(e);
+```
+
+### Case 3 ### {#examples-coroutine-3}
+
+Starts by an executor `ex`, resumes in the thread that triggered the completion
+of `f`
+
+```cpp
+co_await spawn(ex) |> f;
+```
+
+### Case 4 ### {#examples-coroutine-4}
+
+Starts on executor `ex1`, resumes on executor `ex2`
+
+```cpp
+co_await spawn(ex1) |> f |> via(ex2)
+```
