@@ -65,14 +65,6 @@ operator.
 </ins>
 </blockquote>
 
-In 7.6.1.1 Subscripting [**expr.sub**] add a paragraph
-
-<blockquote>
-<ins>
-<sup>4</sup>The built-in comma operator shall not be used within the subscript
-operator.
-</blockquote>
-
 In 11.5.5 Subscripting [**over.sub**]
 
 <blockquote>
