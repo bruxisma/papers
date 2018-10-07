@@ -98,7 +98,7 @@ with the `shared` attribute in one translation unit and the same entity is
 declared without the `shared` attribute in another translation unit, the
 program is ill-formed.
 </ins>
-<blockquote>
+</blockquote>
 
 ## Feature Testing ## {#feature-testing}
 

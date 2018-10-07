@@ -41,6 +41,8 @@ arrows on your screen, instead of a `|` and `>`/`<` combo, you probably are
 using a monospaced font with ligatures enabled. This paper does not recommend
 unicode specific characters.
 
+# Design # {#design}
+
 The plan is to define these operators' precedence such that they are above the
 comma operator, but below the compound assignment operators. This should,
 ideally, allow them to begin to be written in code with minimal interference

@@ -1,0 +1,134 @@
+<pre class='metadata'>
+Markup Shorthands: markdown yes
+Group: WG21
+Status: P
+Shortname: P1277
+Revision: 0
+Audience: EWG
+Title: Subscripts On Parade
+Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
+URL: https://wg21.link/p1277r0
+Abstract: Subscripting into a type that models a multidimensional array should
+Abstract: be viable and possible without having to implement proxy types or
+Abstract: using the call operator as an overload.
+!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxs9G">P1277R0</a>
+!Current Source: <a href="https://git.io/fxs9c">slurps-mad-rips/papers/proposals/subscript-parade.bs</a>
+</pre>
+<style>
+ins  {background-color: #CCFFCC; text-decoration: underline;}
+del  {background-color: #FFCACA; text-decoration: line-through;}
+</style>
+
+# Revision History # {#changelog}
+
+## Revision 0 ## {#r0}
+
+Initial Release 🎉
+
+# Motivation # {#motivation}
+
+As multidimensional types such as `std::mdspan` and other HPC types come about,
+it is becoming increasingly clear that the recommended convention of simply
+overloading `operator ()` to pass in multiple indices is not enough. This paper
+seeks to permit adding multiple arguments to `operator []` to permit
+expressions like `mdspan[1, 2, 3]`. This change is compatible with existing
+code as overloads for these multiple arguments need to be present on a given
+type for this to work in the first place.
+
+This paper works alongside [[P1161]], but takes the more bold statement that we
+need multiple arguments to the subscript operator *now* rather than later.
+After all, it has to start somewhere. It has to start sometime. What better
+place than here? What better time than *now*?
+
+# Design # {#design}
+
+The current design of this paper is to permit multiple arguments to be passed
+to `operator []`. This changes the proposed behavior seen in [[P1161]], where
+`array[x, y]` is in fact not deprecated, but instead attempts to call
+`array.operator [](x, y)`. This gives us the opportunity to have
+multidimensional array types that act like multidimensional arrays. This also
+saves us the pain of having to implement proxy types that are returned for the
+sole purpose of being indexed upon, or having to use `operator ()`, which while
+an existing convention is confusing when compared to other callable interfaces
+(that is, `mdspan` is not a Callable, yet it satisfies the interface for it).
+This also meas that the built-in comma operator is not permitted inside of
+subscript expressions.
+
+# Wording # {#wording}
+
+In 7.6.19 Comma operator [**expr.comma**] add a paragraph
+
+<blockquote>
+<ins>
+<sup>3</sup>The built-in comma operator shall not be used within the subscript
+operator.
+</ins>
+</blockquote>
+
+In 7.6.1.1 Subscripting [**expr.sub**] add a paragraph
+
+<blockquote>
+<ins>
+<sup>4</sup>The built-in comma operator shall not be used within the subscript
+operator.
+</blockquote>
+
+In 11.5.5 Subscripting [**over.sub**]
+
+<blockquote>
+<sup>1</sup>`operator []` shall be a non-static member function with
+<del>exactly one parameter</del><ins>an arbitrary number of parameters</ins>.
+It implements the subscripting syntax:
+
+*postfix-expression* **[** <del>*expr-or-braced-init-list*</del><ins>*expression-list*<sub>*opt*</sub></ins> **]**
+
+Thus, a subscripting expression <del>`x[y]` is interpreted as `x.operator[](y)`
+for a class object `x` of type `T` if `T::operator[](T1)`</del><ins>
+`x[arg1,...]` is interpreted as `x.operator[](arg1, ...)` for a class
+object `x` of type `T` if `T::operator()(T1, T2, T3)`</ins> exists and if the
+operator is selected as the best match function by the overload resolution
+mechanism [*Example:*
+<del>
+<xmp highlight="c++">
+struct X {
+  Z operator [] (std::initializer_list<int>);
+};
+X x;
+x[{1, 2, 3}] = 7;     // OK: meaning x.operator[]({1, 2, 3})
+int a[10];
+a[{1, 2, 3}] = 7;     // error: built-in subscript operator
+</xmp>
+</del>
+<ins>
+<xmp highlight="c++">
+struct X {
+  Z operator [] (std::initializer_list<int>);
+  Z operator [] (int x, int y, int z);
+};
+X x;
+x[{1, 2, 3}] = 7;     // OK: meaing x.operator[]({1, 2, 3})
+x[1, 2, 3] = 7;       // OK: meaning x.operator[](1, 2, 3)
+int a[10];
+a[{1, 2, 3}] = 7;     // error: built-in subscript operator
+a[1, 2, 3] = 7;       // error: built-in subscript operator
+</xmp>
+</ins>
+&mdash; *end example*]
+ 
+<p>
+<ins>
+<sup>2</sup>In subscript expressions, the built-in comma operator shall not be
+used
+</ins>
+</p>
+</blockquote>
+
+<pre class=biblio>
+{
+  "P1161": {
+    "title": "Deprecate uses of the comma operator in subscripting expressions",
+    "href": "https://wg21.link/p1161r0",
+    "authors": "Corentin Jabot"
+  }
+}
+</pre>

@@ -34,13 +34,8 @@ fixed/least/max integer types provided by `<cstdint>`. As that paper has
 decided to focus exclusively on `ptrdiff_t` and `size_t`, this proposal will
 instead focus on the *fixed* width integer literals. The problem of least/max
 literals is left for another time and paper. The primary goal of this paper is
-to replace the `UINTxx_C`/`INTxx_C` macros found in `<cstdint>` with character
-literals.
-
-Note: The author is more than willing to extend this paper's scope for the
-least and max integer types, however the fixed width integer literals show
-promise of the least complex changes. Also we get to deprecate some C macros in
-the process and that's always a good thing.
+to replace the `UINTxx_C`/`INTxx_C` macros found in `<cstdint>` with user
+defined literal suffixes.
 
 As an example, one can see the results of the compiler results on
 <a href="https://gcc.godbolt.org/z/CzOF2m">godbolt</a>.
@@ -55,11 +50,16 @@ void test()
 {
     // change this to 10ul and it fails to compile on MSVC
     // change this to 10ull and it fails to compile on GCC and Clang
-    // The only safe thing to do is to use the `UINTXX_C` macros.
+    // The only safe thing to do is to use the UINTXX_C macros.
     auto x = 10; 
     foo(x);
 }
 ```
+
+Note: The author is more than willing to extend this paper's scope for the
+least and max integer types, however the fixed width integer literals show
+promise of the least complex changes. Also we get to deprecate some C macros in
+the process and that's always a good thing.
 
 # Design # {#design}
 
