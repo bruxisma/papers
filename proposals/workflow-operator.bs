@@ -193,7 +193,7 @@ auto operator|>(std::expected<T, E> const& ex, map const& fun) {
 }
 
 template<typename T, typename E, typename L>
-auto operator|>( std::expected<T, E> const& ex, map const& fun) {
+auto operator|>(std::expected<T, E> const& ex, map const& fun) {
     return ::and_then(ex, fun.t);
 }
 
