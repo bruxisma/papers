@@ -85,7 +85,7 @@ It implements the subscripting syntax:
 Thus, a subscripting expression <del>`x[y]` is interpreted as `x.operator[](y)`
 for a class object `x` of type `T` if `T::operator[](T1)`</del><ins>
 `x[arg1,...]` is interpreted as `x.operator[](arg1, ...)` for a class
-object `x` of type `T` if `T::operator()(T1, T2, T3)`</ins> exists and if the
+object `x` of type `T` if `T::operator[](T1, T2, T3)`</ins> exists and if the
 operator is selected as the best match function by the overload resolution
 mechanism [*Example:*
 <del>
