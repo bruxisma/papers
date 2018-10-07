@@ -10,7 +10,7 @@ Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
 URL: https://wg21.link/p1283r0
 Date: 2018-10-05
 Abstract: A builtin standard breakpoint function would aid in software
-Abstract: development
+Abstract: development.
 !Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsZ6">P1283</a>
 !Current Source: <a href="https://git.io/fxsZP">slurps-mad-rips/papers/proposals/breakpoint.bs</a>
 !Implementation: <a href="">slurps-mad-rips/breakpoint</a>
@@ -33,9 +33,9 @@ newcomers to C++. Rather than having to learn C++, they have to learn a special
 syntax just to place a breakpoint in the exact spot they want, or rely on the
 interface of an IDE. At the end of the day, a simple programmer just wants to
 place a breakpoint so that their program stops when under the watchful eye of a
-debuggger.
+debugger.
 
-This paper proposes a new function `std::breakpoint`, that causes a program to
+This paper proposes a new function, `std::breakpoint`, that causes a program to
 stop or "break" execution when it is being debugged.
 
 # Design # {#design}

@@ -1,0 +1,161 @@
+<pre class="metadata">
+Markup Shorthands: markdown yes
+Group: WG21
+Status: P
+Shortname: P1275
+Revision: 0
+Audience: LEWG, SG15, SG16
+Title: Desert Sessions: Improving hostile environment interactions
+Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
+URL: https://wg21.link/p1275r0
+Date: 2018-10-06
+Abstract: Working with environment variables and command line arguments is
+Abstract: painful, platform specific, and lacking a modern C++ touch.
+!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsCx">P1275R0</a>
+!Current Source: <a href="https://git.io/fxsWe">slurps-mad-rips/papers/proposals/desert-sessions.bs</a>
+!Implementation: <a href="">slurps-mad-rips/sessions</a>
+</pre>
+<style>
+ins  {background-color: #CCFFCC; text-decoration: underline;}
+del  {background-color: #FFCACA; text-decoration: line-through;}
+</style>
+
+# Revision History # {#changelog}
+
+## Revision 0 ## {#r0}
+
+Initial Release 🎉
+
+# Motivation # {#motivation}
+
+Environment variables are an important aspect of modern systems. Yet, as of
+right now, C and C++ lack a standardized way to iterate through all current
+environment variables. An interface to iterate, get, set, erase, and modify
+environment variables, as well as providing familiar syntax found in other
+programming languages is needed.
+
+Additionally, accessing command line arguments when `main` is outside of
+your control is currently not possible. Instead, objects must be initialized
+inside of `main`, or global variables must be initialized once `main` has
+started. Additionally, on Windows, the standard `char** argv` type is
+deprecated for use in `main`, and the only correct way to get the command line
+arguments is to call platform specific functions or use `WinMain` and `wmain`,
+both of which are non-standard entry points into the program. This is all such
+a strange approach compared to most other languages, especially due to command
+line arguments existing for the duration of a programs life. In languages such
+as Python, Rust, Ruby, Haskell, and C#, getting the list of command line
+arguments is just a function or member call away.
+
+This paper aims to rectify both of these problems, while providing a familiar
+interface for users of `argv` as well as providing an interaction with Ranges.
+
+# Design # {#design}
+
+This paper proposes the addition of a new header, `<session>`, for any and all
+types or functions that affect the current program's running session. To begin
+with we add two types into this header: `std::arguments` and
+`std::environment`. Each one is a wrapper interface around the command line and
+environment variables respectively.
+
+`std::arguments` attempts to meet *most* of the Named Requirements found in
+*SequenceContainer*. However, because it is an immutable container (it can not
+grow, shrink, delete or add its elements), its interface is effectively reduced
+to that of a `std::vector<T> const`. If mutation or modifications are desired,
+it is recommended that one construct a `std::vector` from the elements of
+`std::arguments`. The elements found inside of `std::arguments` is currently
+`std::string_view`. Whether the contents of these `string_view`s are bytes or
+UTF-8 is intended to be implementation defined. The interface for
+`std::arguments` will need to be revisited once SG16's initial work is
+released, as a unicode-only interface for arguments is desirable.
+
+`std::environment` is a bit more complex. It can be seen as an associative
+container, however it attempts to store no state unless absolutely needed.
+Additionally, for ease of use, it provides three ranges interfaces:
+
+ * `std::environment.keys()`
+ * `std::environment.values()`
+ * `std::environment`
+
+Each of these ranges provides iteration over the keys, values, or the pair of
+both. Additionally subscript gets and sets are possible as well:
+
+```cpp
+auto x = std::environment["PATH"];
+```
+
+The following straw polls are requested regarding the interface for both
+`std::arguments` and `std::environment`:
+
+ * Should they be `static inline` variables?
+ * Should they be templated on their argument values?
+ * Should they have (optionally template) aliases provided?
+ * Should they have shorter names available (`std::args`, `std::env`)?
+
+Additionally, the plan is to provide two functions to easily iterate over a
+"path list". On platforms where this matters, an implementation specific path
+separator (e.g., `:` on POSIX, `;` on Windows) is used to separate multiple
+values when storing file system paths in enviroment variables. These functions
+create iterators that permit both the splitting of `std::string_view` objects
+into `std::filesystem::path` objects, as well as joining
+`std::filesystem::path` objects into a `std::string` that can then be assigned
+to an environment variable.
+
+Lastly, on platforms where arguments or environment variables cannot typically
+be passed in or read from, attempting to iterate `std::arguments` and
+`std::environment` will yield an empty range, and attempting to index or
+subscript into them will return empty `std::string_view` objects.
+
+## Synopsis ## {#design-synopsis}
+
+The `<session>` headers full specification is:
+
+```c++
+namespace std {
+    class arguments {
+      using iterator = /* implementation-defined */
+      using reverse_iterator = reverse_iterator<iterator>;
+      using value_type = std::string_view;
+      using index_type = size_t;
+      using size_type = size_t;
+
+      value_type operator [] (index_type) const noexcept;
+      value_type at (index_type) const noexcept(false);
+
+      [[nodiscard]] bool empty () const noexcept;
+      size_type size () const noexcept;
+
+      iterator cbegin () const noexcept;
+      iterator cend () const noexcept;
+
+      iterator begin () const noexcept;
+      iterator end () const noexcept;
+
+      reverse_iterator crbegin () const noexcept;
+      reverse_iterator crend () const noexcept;
+
+      reverse_iterator rbegin () const noexcept;
+      reverse_ierator rend () const noexcept;
+
+      [[nodiscard]] char** argv () const noexcept;
+      [[nodiscard]] int argc () const noexcept;
+    };
+
+    class environment {
+      class variable {
+        operator std::string_view () const noexcept;
+        variable& operator = (std::string_view);
+        std::string_view key () const noexcept;
+      };
+
+      using value_range = /* implementation-defined */
+      using key_range = /* implementation-defined */
+      using iterator = /* implementation-defined */
+      using value_type = variable;
+
+      value_type operator [] (std::string const&) const noexcept;
+      value_type operator [] (std::string_view) const noexcept;
+      value_type operator [] (char const*) const noexcept;
+
+    };
+}
+```
