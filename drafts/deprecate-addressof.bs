@@ -72,6 +72,8 @@ Perhaps it's time for a little pragmatism.
 
 # Wording # {#wording}
 
+Wording is relative to [[N4762]]
+
 In 11.3.1.2 Operators in expressions [**over.match.oper**], paragraph 3, add a
 new bullet point:
 
