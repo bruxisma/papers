@@ -7,11 +7,11 @@ Revision: 0
 Audience: SG14, LEWG
 Title: std::breakpoint
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
-URL: https://wg21.link/p1283r0
+URL: https://wg21.link/p1279r0
 Date: 2018-10-05
 Abstract: A builtin standard breakpoint function would aid in software
 Abstract: development.
-!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsZ6">P1283</a>
+!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsZ6">P1279</a>
 !Current Source: <a href="https://git.io/fxsZP">slurps-mad-rips/papers/proposals/breakpoint.bs</a>
 !Implementation: <a href="https://git.io/fxGTy">slurps-mad-rips/breakpoint</a>
 </pre>
