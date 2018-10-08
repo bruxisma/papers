@@ -1,0 +1,89 @@
+<pre class='metadata'>
+Markup Shorthands: markdown yes
+Group: WG21
+Status: P
+Shortname: P1281
+Revision: 0
+Audience: SG15
+Title: Feature Presentation
+Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
+URL: https://wg21.link/p1281r0
+Abstract: `if constexpr` does not work at any scope beyond that of a function.
+Abstract: Let's add an attribute and function so that we can have feature or
+Abstract: platform specific code without having to use the preprocessor.
+!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxs9E">P1281R0</a>
+!Current Source: <a href="https://git.io/fxs90">slurps-mad-rips/papers/proposals/feature-presentation.bs</a>
+</pre>
+<style>
+ins  {background-color: #CCFFCC; text-decoration: underline;}
+del  {background-color: #FFCACA; text-decoration: line-through;}
+</style>
+
+# Revision History # {#changelog}
+
+## Revision 0 ## {#r0}
+
+Initial Release 🎉
+
+# Motivation # {#motivation}
+
+Languages like Rust or D or dynamically typed languages like Python and Ruby
+have some form of a global "static" if (static in the sense that it executes at
+compile time). While a previous attempt was made to add this to C++, it was
+later reduced down to `if constexpr`. However, `if constexpr` is limited in
+that it still requires code be semantically correct. This makes is very
+difficult to use for wrapping platform specific code for cross platform
+interfaces. Instead, we must still rely on preprocessor `ifdef`s in order to
+get what we want. In Rust, they have a `#[cfg()]` attribute that allows
+specific declarations and definitions to be removed from the AST at compile
+time. This paper proposes to add both a `[[feature()]]` attribute as well as a
+function `std::feature` that would permit removing the need for `ifdef` at any
+non-function level scope. This is desired due to programmers having to target a
+platform, and in some cases multiple platforms that behave more or less the
+same, but have different identifiers available.
+
+# Design # {#design}
+
+The design of the feature presentation is two-fold. When a compiler sees the
+`[[feature("key")]]` attribute, it has to see if it is in the allowed or
+blocked list of "features". If any of the  `key` strings are allowed, the
+compiler parses as normal. In the event that the key is absent or in an
+explicit block list, the compiler attempts to treat the declaration and all its
+contents as a token soup, thus removing it from the AST. In other words, the
+code contained within a declaration where the feature attribute key is
+disallowed must be syntactically, but not semantically, correct. If the feature
+key given is allowed, then the compiler treats the declaration like normal.
+
+We also provide a `std::feature()` function which allows users to check whether
+a given set of strings are valid inside of `if constexpr`.
+
+Lastly, this attribute does not interfere with ODR, since two translation units
+compiled with the same named definition but different features is not
+permitted.
+
+# Example # {#example}
+
+As a example, let's look at some simple interface code that could be written
+with this attribute, where we are targeting both DirectX and Vulkan:
+
+```cpp
+
+struct [[feature("vulkan")]] Device {
+  [[feature("glsl-to-spirv")]]
+  static Shader compile(std::filesystem::path filename);
+  static Shader load (std::filesystem::path spirv_file);
+};
+
+struct [[feature("direct-x")]] Device {
+  [[feature("hlsl-to-spirv")]]
+  static Shader compile (std::filesystem::path filename);
+  static Shader load (std::filesystem::path spirv_file);
+};
+```
+
+In the above sample, we have two interfaces for a class named `Device`. In this
+case, we might want to have the ability to compile shaders to an intermediate
+SPIR-V representation before we release the product that uses this code.
+However, allowing users to use the product's compiler might not be desired and
+thus we can choose to not only switch between these operations but to disable
+the ability to even call `Device::compile` in all interfaces.
