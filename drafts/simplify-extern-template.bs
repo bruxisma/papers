@@ -59,7 +59,7 @@ Modifying the standard to let us `extern template` aliases is desirable.
 Note: This paper does not attempt to permit specializations of alias templates,
 nor does it permit identifiers defined via a typedef. Instead an
 *alias-declaration* must be used. This is done to encourage the newer syntax
-when working with `1extern template`.
+when working with `extern template`.
 
 # Wording # {#wording}
 
