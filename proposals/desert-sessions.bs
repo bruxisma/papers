@@ -13,7 +13,7 @@ Abstract: Working with environment variables and command line arguments is
 Abstract: painful, platform specific, and lacking a modern C++ touch.
 !Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsCx">P1275R0</a>
 !Current Source: <a href="https://git.io/fxsWe">slurps-mad-rips/papers/proposals/desert-sessions.bs</a>
-!Implementation: <a href="">slurps-mad-rips/sessions</a>
+!Implementation: <a href="https://git.io/fxGTH">slurps-mad-rips/sessions</a>
 </pre>
 <style>
 ins  {background-color: #CCFFCC; text-decoration: underline;}
