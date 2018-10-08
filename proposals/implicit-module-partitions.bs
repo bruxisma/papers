@@ -1,21 +1,21 @@
 <pre class='metadata'>
 Markup Shorthands: markdown yes
 Group: WG21
-Status: D
-Shortname: DXXXX
+Status: P
+Shortname: P1302
 Revision: 0
 Audience: EWG
 Title: Implicit Module Partition Lookup
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
 Editor: Richard Smith, richard@metafoo.co.uk
 Date: 2018-10-07
-URL:
+URL: https://wg21.link/p1302r0
 Abstract: While we cannot enforce a project or directory layout for module
 Abstract: interface units, we can encourage a general convention that
 Abstract: developers, build systems, and compiler vendors can rely on for
 Abstract: "quick paths" when developing software in C++
-!Current Render: <a href="">DXXXXR0</a>
-!Current Source: <a href="">slurps-mad-rips/papers/proposals/implicit-module-partition.bs</a>
+!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxG98">P1302</a>
+!Current Source: <a href="https://git.io/fxGS1">slurps-mad-rips/papers/proposals/implicit-module-partition.bs</a>
 </pre>
 <style>
 ins  {background-color: #CCFFCC; text-decoration: underline;}
