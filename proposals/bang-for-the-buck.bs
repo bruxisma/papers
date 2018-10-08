@@ -64,7 +64,11 @@ repurposed for this specific identifier location.
 
 # Wording # {#wording}
 
-All wording is relative to [[N4762]]
+All wording is relative to [[N4762]].
+
+Note: Wording for the exact changes to permit **!** and **?** are currently
+withheld until the San Diego post mailing to see where they should be placed
+exactly within the grammar.
 
 ## ! and ? ## {#wording-interrobang}
 
