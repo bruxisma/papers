@@ -1,8 +1,8 @@
 <pre class='metadata'>
 Markup Shorthands: markdown yes
 Group: WG21
-Status: D
-Shortname: DXXXX
+Status: P
+Shortname: P1305
 Revision: 0
 Audience: EWG
 Title: Deprecate The Addressof Operator
@@ -17,8 +17,8 @@ Abstract: later made `constexpr`. Even if a minority of programmers do use it
 Abstract: for representing some other memory model, why should the rest of the
 Abstract: compiler vendors, C++ programmers, and library implementors have to
 Abstract: make due with a function? It should be the other way around!
-!Current Render: <a href=""></a>
-!Current Source: <a href="">slurps-mad-rips/papers/proposals/simplify-extern-template.bs</a>
+!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxGSW">P1305</a>
+!Current Source: <a href="https://git.io/fxGSB">slurps-mad-rips/papers/proposals/deprecate-addressof.bs</a>
 </pre>
 <style>
 ins  {background-color: #CCFFCC; text-decoration: underline;}

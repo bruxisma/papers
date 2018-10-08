@@ -2,7 +2,7 @@
 Markup Shorthands: markdown yes
 Group: WG21
 Status: P
-Shortname: P1283
+Shortname: P1279
 Revision: 0
 Audience: SG14, LEWG
 Title: std::breakpoint
