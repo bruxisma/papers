@@ -93,6 +93,34 @@ namespace std::inline literals::inline integer_literals {
 }
 ```
 
+# Examples # {#examples}
+
+A small code example is presented below to show how the suffix can be
+used in code. (This code sample assumes that [[P0645]] has been added to the
+standard. Additionally as the author of [[P1276]], we use that here as well)
+
+Note: This code sample does not attempt to solve the previously shown code
+in [[#motivation]], as this is easily solved elsewhere.
+
+```cpp
+template <class... Args>
+void println (Args&&... args) {
+  std::puts(std::format(std::forward<Args>(args)...).c_str());
+}
+
+void main () {
+  using namespace std::literals;
+  println("1 + 2 = {}", 1u32 + 2);
+  println("1 - 2 = {}", 1i32 - 2);
+
+  println("0011 AND 0101 is {:04b}", 0b0011u32 & 0b0101);
+  println("0011 XOR 0101 is {:04b}", 0b0011u32 ^ 0b0101);
+  println("0011 OR 0101 is {:04b}", 0b0011u32 | 0b0101);
+
+  println("One million is written as {}", 1'000'000u32)
+}
+```
+
 # Wording # {#wording}
 
 The following is wording for the library section.
@@ -108,7 +136,7 @@ namespace std::inline literals::inline integer_literals {
 <ol>
 <li>*Constraints*
 
-  `arg` must fit in the range to `arg <= numeric_limits<uint64_t>::max()`
+  `arg` must fit in the range `arg <= numeric_limits<uint64_t>::max()`
 </li>
 <li>*Returns*
 
@@ -126,7 +154,7 @@ namespace std::inline literals::inline integer_literals {
 <ol>
 <li>*Constraints*
 
-  `arg` must fit in the range to `arg <= numeric_limits<uint32_t>::max()`
+  `arg` must fit in the range `arg <= numeric_limits<uint32_t>::max()`
 </li>
 <li>*Returns*
 
@@ -144,7 +172,7 @@ namespace std::inline literals::inline integer_literals {
 <ol>
 <li>*Constraints*
 
-  `arg` must fit in the range to `arg <= numeric_limits<uint16_t>::max()`
+  `arg` must fit in the range `arg <= numeric_limits<uint16_t>::max()`
 </li>
 <li>*Returns*
 
@@ -162,7 +190,7 @@ namespace std::inline literals::inline integer_literals {
 <ol>
 <li>*Constraints*
 
-  `arg` must fit in the range to `arg <= numeric_limits<uint8_t>::max()`
+  `arg` must fit in the range `arg <= numeric_limits<uint8_t>::max()`
 </li>
 <li>*Returns*
 
@@ -179,7 +207,7 @@ namespace std::inline literals::inline integer_literals {
 <ol>
 <li>*Constraints*
 
-  `arg` must fit in the range to `arg <= numeric_limits<int64_t>::max()`
+  `arg` must fit in the range `arg <= numeric_limits<int64_t>::max()`
 </li>
 <li>*Returns*
 
@@ -196,7 +224,7 @@ namespace std::inline literals::inline integer_literals {
 <ol>
 <li>*Constraints*
 
-  `arg` must fit in the range to `arg <= numeric_limits<int32_t>::max()`
+  `arg` must fit in the range `arg <= numeric_limits<int32_t>::max()`
 </li>
 <li>*Returns*
 
@@ -213,7 +241,7 @@ namespace std::inline literals::inline integer_literals {
 <ol>
 <li>*Constraints*
 
-  `arg` must fit in the range to `arg <= numeric_limits<int16_t>::max()`
+  `arg` must fit in the range `arg <= numeric_limits<int16_t>::max()`
 </li>
 <li>*Returns*
 
@@ -230,7 +258,7 @@ namespace std::inline literals::inline integer_literals {
 <ol>
 <li>*Constraints*
 
-  `arg` must fit in the range to `arg <= numeric_limits<int8_t>::max()`
+  `arg` must fit in the range `arg <= numeric_limits<int8_t>::max()`
 </li>
 <li>*Returns*
 
@@ -252,7 +280,17 @@ The `__cpp_lib_integer_literals` feature test macro should be added.
       "Rein Halbersma"
     ],
     "href": "https://wg21.link/p0330r2",
-    "title": "Literal Suffixes for ptrdiff_t and size_t",
+    "title": "Literal Suffixes for ptrdiff_t and size_t"
+  },
+  "P1276": {
+    "authors": "Isabella Muerte",
+    "href": "https://wg21.link/p1276r0",
+    "title": "Void Main"
+  },
+  "P0645": {
+    "authors": "Victor Zverovich",
+    "href": "https://wg21.link/p0645r3",
+    "title": "Text Formatting"
   }
 }
 </pre>
