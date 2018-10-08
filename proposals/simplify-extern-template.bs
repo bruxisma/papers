@@ -1,19 +1,19 @@
 <pre class='metadata'>
 Markup Shorthands: markdown yes
 Group: WG21
-Status: D
-Shortname: DXXXX
+Status: P
+Shortname: P1304
 Revision: 0
 Audience: EWG
 Title: Simplifying Extern Template
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
 Date: 2018-10-07
-URL:
+URL: https://wg21.link/p1304r0
 Abstract: Writing extern template statements is painful as we have to write out
 Abstract: the template as it was originally declared, and not as it might be
 Abstract: presented to the user.
-!Current Render: <a href=""></a>
-!Current Source: <a href="">slurps-mad-rips/papers/proposals/simplify-extern-template.bs</a>
+!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxGHv">P1304</a>
+!Current Source: <a href="https://git.io/fxGHY">slurps-mad-rips/papers/proposals/simplify-extern-template.bs</a>
 </pre>
 <style>
 ins  {background-color: #CCFFCC; text-decoration: underline;}
