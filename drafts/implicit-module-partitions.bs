@@ -7,7 +7,7 @@ Revision: 0
 Audience: EWG
 Title: Implicit Module Partition Lookup
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
-Editor: Richard Smith
+Editor: Richard Smith, richard@metafoo.co.uk
 Date: 2018-10-07
 URL:
 Abstract: While we cannot enforce a project or directory layout for module
@@ -46,8 +46,8 @@ The design for this convention is as follows:
 A so-called *root module* is placed inside of a directory. This module has the
 name `module.{ext}` (where `{ext}` is some developer decided file extension.
 However, this paper recommends `.cxx` as that is the environment variable used
-by plenty of C++ build systems, the `+` have relaxed a little bit and are kind
-of laying "down" and the language is more expressive than restrictive.) and it
+by plenty of C++ build systems to represent the C++ compiler, whereas the
+environment variable `CPP` represents the **C** **P**re**P**rocessor) and it
 holds the primary set of imports and exports for a given module. Module
 interface units in the same directory are treated as "implicit" partitions. So
 `import :list`, means the compiler will look for a file named `list.{ext}`.
@@ -100,7 +100,7 @@ has the following properties:
       Pitchfork Layout and enforce it for modules having legacy non-module code
       in the same project layout.
   7. It allows developers to view modules as hierarchical, even if they aren't.
-       This means that, if treatig modules as a hierarchy becomes widespread
+       This means that, if treating modules as a hierarchy becomes widespread
        enough, the standard could possibly enforce modules as hierarchies in
        the future.
   8. Platforms where launching processes are expensive can take advantage of
@@ -115,7 +115,6 @@ has the following properties:
       build system in existence. Thus we can safely assume that a build system
       does not need to reparse or rebuild a module if its containing directory
       has not changed.
-
 
 # Examples # {#examples}
 

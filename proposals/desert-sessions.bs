@@ -105,57 +105,144 @@ be passed in or read from, attempting to iterate `std::arguments` and
 `std::environment` will yield an empty range, and attempting to index or
 subscript into them will return empty `std::string_view` objects.
 
+Note: For security reasons we do not currently provide a cross platform way to
+get the current executable or home directory.
+
+Wording has been witheld in this initial paper to see what interface changes
+are necessary.
+
 ## Synopsis ## {#design-synopsis}
 
 The `<session>` headers full specification is:
 
 ```c++
 namespace std {
-    class arguments {
-      using iterator = /* implementation-defined */
-      using reverse_iterator = reverse_iterator<iterator>;
-      using value_type = std::string_view;
-      using index_type = size_t;
-      using size_type = size_t;
+    class arguments;
+    class environment;
 
-      value_type operator [] (index_type) const noexcept;
-      value_type at (index_type) const noexcept(false);
-
-      [[nodiscard]] bool empty () const noexcept;
-      size_type size () const noexcept;
-
-      iterator cbegin () const noexcept;
-      iterator cend () const noexcept;
-
-      iterator begin () const noexcept;
-      iterator end () const noexcept;
-
-      reverse_iterator crbegin () const noexcept;
-      reverse_iterator crend () const noexcept;
-
-      reverse_iterator rbegin () const noexcept;
-      reverse_ierator rend () const noexcept;
-
-      [[nodiscard]] char** argv () const noexcept;
-      [[nodiscard]] int argc () const noexcept;
-    };
-
-    class environment {
-      class variable {
-        operator std::string_view () const noexcept;
-        variable& operator = (std::string_view);
-        std::string_view key () const noexcept;
-      };
-
-      using value_range = /* implementation-defined */
-      using key_range = /* implementation-defined */
-      using iterator = /* implementation-defined */
-      using value_type = variable;
-
-      value_type operator [] (std::string const&) const noexcept;
-      value_type operator [] (std::string_view) const noexcept;
-      value_type operator [] (char const*) const noexcept;
-
-    };
+    std::string join_paths (Iter begin, Iter end);
+    std::string join_paths (Range);
 }
 ```
+
+### Arguments ### {#design-synopsis-arguments}
+
+The `arguments` class represents a mostly sequence-like container. It can be
+seen as a wrapper around `argv`, while still being accessible from outside of
+`main`. The object itself is immutable, and could technically be treated as a
+singleton. Reading from `arguments` is thread-safe, as is iterating over it.
+The type it currently returns is `std::string_view`, as this type can represent
+both UTF-8 and raw bytes. While the wording is not yet complete in this initial
+draft, it is intended that `arguments` only permit bytes from the operating
+system directly *or* UTF-8 only. Treating UTF-16 characters as bytes will not
+be permitted. At some point in the future, this will have to change, or an
+additional unicode-only `arguments` class will have to be implemented.
+
+Additionally, it still provides access to the underlying `char** argv` and
+length of `argc` for backwards compatibility with APIs that still expect it as
+such.
+
+```cpp
+class arguments {
+  using iterator = /* implementation-defined */
+  using reverse_iterator = reverse_iterator<iterator>;
+  using value_type = std::string_view;
+  using index_type = size_t;
+  using size_type = size_t;
+
+  value_type operator [] (index_type) const noexcept;
+  value_type at (index_type) const noexcept(false);
+
+  [[nodiscard]] bool empty () const noexcept;
+  size_type size () const noexcept;
+
+  iterator cbegin () const noexcept;
+  iterator cend () const noexcept;
+
+  iterator begin () const noexcept;
+  iterator end () const noexcept;
+
+  reverse_iterator crbegin () const noexcept;
+  reverse_iterator crend () const noexcept;
+
+  reverse_iterator rbegin () const noexcept;
+  reverse_ierator rend () const noexcept;
+
+  [[nodiscard]] char** argv () const noexcept;
+  [[nodiscard]] int argc () const noexcept;
+};
+```
+
+### Environment ### {#design-synopsis-environment}
+
+The `environment` mapping object is also *mostly* immutable itself. It does
+support removing keys directly, although setting them directly is not
+supported. However, the environment can be modified by operating on the
+`variable` class it returns from `operator []`. This type acts as a proxy
+object and can be assigned to with nearly any string-like object. Additionally,
+it can return an object that has a pair of iterators that permit range
+operations to "split" on the path separator for a given environment variable.
+
+Some platform's keys are case insensitive and for this reason, the
+`environment` silently checks both upper and lower case keys for their
+validity. This is safe to do as currently all platforms store their keys as
+ASCII strings.
+
+Note: Due to platform specific restrictions, environments can be iterated on
+while also actively mutating them. However, the underlying iterator's
+environment will still iterate on the unmodified version of the environment.
+After extensively looking at all operating systems available, it was confirmed
+that they all behave in this same way.
+
+```cpp
+class environment {
+  class variable {
+    operator std::string_view () const noexcept;
+    variable& operator = (std::string_view);
+    std::string_view key () const noexcept;
+    /* implementation-defined */ split () const;
+  };
+
+  using value_range = /* implementation-defined */
+  using key_range = /* implementation-defined */
+  using iterator = /* implementation-defined */
+  using value_type = variable;
+
+  template <class T>
+  value_type operator [] (T const&) const; // see below
+
+  value_type operator [] (std::string const&) const noexcept;
+  value_type operator [] (std::string_view) const;
+  value_type operator [] (char const*) const noexcept;
+
+  template <class K>
+  iterator find (K const&) const noexcept;
+
+  bool contains (std::string_view) const noexcept;
+
+  iterator cbegin () const noexcept;
+  iterator cend () const noexcept;
+
+  iterator begin () const noexcept;
+  iterator end () const noexcept;
+
+  size_type size () const noexcept;
+  bool empty () const noexcept;
+
+  value_range values () const noexcept;
+  key_range keys () const noexcept;
+
+  template <class K>
+  void erase (K const&) noexcept;
+};
+```
+
+All member functions that take a `T const&` follow the same rules regarding
+`std::string`'s 10th and 11th constructors regarding `std::string_view`
+conversion.
+
+In the case of `environment::find`, this function follows the same rules of
+`std::map::find` as though it's `Compare::is_transparent` were valid.
+
+Note: `environment` does not have a `Compare` template member, but can act as
+though it has one, since it works almost exclusively on strings.
