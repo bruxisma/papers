@@ -72,7 +72,8 @@ In 11.5.5 Subscripting [**over.sub**]
 <del>exactly one parameter</del><ins>an arbitrary number of parameters</ins>.
 It implements the subscripting syntax:
 
-*postfix-expression* **[** <del>*expr-or-braced-init-list*</del><ins>*expression-list*<sub>*opt*</sub></ins> **]**
+:
+:: *postfix-expression* **[** <del>*expr-or-braced-init-list*</del><ins>*expression-list*<sub>*opt*</sub></ins> **]**
 
 Thus, a subscripting expression <del>`x[y]` is interpreted as `x.operator[](y)`
 for a class object `x` of type `T` if `T::operator[](T1)`</del><ins>
