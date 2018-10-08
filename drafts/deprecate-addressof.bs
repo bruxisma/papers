@@ -1,0 +1,115 @@
+<pre class='metadata'>
+Markup Shorthands: markdown yes
+Group: WG21
+Status: D
+Shortname: DXXXX
+Revision: 0
+Audience: EWG
+Title: Deprecate The Addressof Operator
+Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
+Date: 2018-10-07
+URL:
+Abstract: The addressof operator (`&`) might have had its use in being
+Abstract: overloaded, however in practice countless issues have arisen from the 
+Abstract: simple possible case of "but what if someone overloaded it?". This 
+Abstract: brought about `std::addressof` which was first non-constexpr, then
+Abstract: later made `constexpr`. Even if a minority of programmers do use it
+Abstract: for representing some other memory model, why should the rest of the
+Abstract: compiler vendors, C++ programmers, and library implementors have to
+Abstract: make due with a function? It should be the other way around!
+!Current Render: <a href=""></a>
+!Current Source: <a href="">slurps-mad-rips/papers/proposals/simplify-extern-template.bs</a>
+</pre>
+<style>
+ins  {background-color: #CCFFCC; text-decoration: underline;}
+del  {background-color: #FFCACA; text-decoration: line-through;}
+</style>
+
+# Revision History # {#changelog}
+
+## Revision 0 ## {#r0}
+
+Initial Release 🎉
+
+# Motivation # {#motivation}
+
+To date, there have only ever been two widely used libraries that utilize
+overloading the addressof operator (`&`). These are the `ComPtr<T>` type from
+Microsoft and Boost.Spirit. Because of these two libraries (and anyone else who
+might get the bright idea to "just overload the addressof operator") standard
+library vendors are required to use `std::addressof`. This is, to be quite
+frank, ridiculous. In the same way that we have to protect our code from comma
+operator overloads (something that should also be deprecated and removed), we
+now have to protect ourselves from one of the most common operations when
+working with a systems programming language: Getting an object's address. While
+it might have made sense at one time to permit users to define their own memory
+model, this approach is no longer viable. Indeed, while `ComPtr<T>` overloads
+the addressof operator, it also provides a function that does the same
+operation. Additionally, Boost.Spirit uses it to represent a DSL from a
+different syntax altogether. While they might be hard pressed to replace these,
+they most likely don't need to get the address of the types they overload with.
+
+Eventually removing the ability to overload the addressof operator will let us
+also remove `std::addressof` at some future date and compilers won't have to
+provide a `constexpr` builtin to do what is already built into the language.
+
+# FAQ # {#faq}
+
+## Will this break code? ## {#faq-break}
+
+No. We're only deprecating the addressof operator. At some point in the future,
+it is assumed users will have migrated off of overloading the operator in favor
+of some function interface. At that point *then* we'll remove overloading the
+addressof operator altogether.
+
+## What's so bad about overloading the addressof operator? ## {#faq-what}
+
+Although it is possible to do so in the language, one will note that the
+standard library at no point provides this overload itself (nor does it for
+`operator ,`, `operator ->*`, and others). This is by design and intent. These
+seemed like good ideas at the time, but it's 2018 now (as of this writing).
+Perhaps it's time for a little pragmatism.
+
+# Wording # {#wording}
+
+In 11.3.1.2 Operators in expressions [**over.match.oper**], paragraph 3, add a
+new bullet point:
+
+<blockquote>
+<ins>
+<sup>(3.4)</sup> &mdash; [Note: overloading the unary `operator &` is
+deprecated. See [**depr.addressof**].
+</ins>
+</blockquote>
+
+In 11.5.1 Unary Operators [**over.unary**] add a new paragraph
+
+<blockquote>
+<ins>
+<sup>3</sup>[Note: overloading the unary `operator &` is deprecated. See
+[**depr.addressof**]
+</ins>
+</blockquote>
+
+In annex D, add a new paragraph
+
+<blockquote>
+<ins>
+**Overloading unary `operator &`** Overloading the unary `operator &` operator
+is deprecated. [*Note:* Using the builtin unary `operator &` is not deprecated
+&mdash; *end note*].
+[*Example:*
+```cpp
+struct X {
+  Z* operator & () const; // deprecated
+};
+X x;
+Z* z = &x;                // deprecated
+
+struct Y { };
+Y y;
+Y* w = &y;                // Not deprecated
+```
+&mdash; *end example*].
+</ins>
+</blockquote>

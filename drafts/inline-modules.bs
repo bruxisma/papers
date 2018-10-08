@@ -8,7 +8,6 @@ Date: 2018-10-07
 Audience: EWG
 Title: Inline Module Partitions
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
-Editor: Jeff Snyder
 URL:
 Abstract:
 !Current Render: <a href="">DXXXXR0</a>
@@ -28,11 +27,11 @@ Initial Release 🎉
 # Motivation # {#motivation}
 
 This paper is an addendum to the [[P1242]] proposal. That paper
-proposes having a module consist of *exactly* two parts: An interface and
+proposes having a module consist of *at most* two parts: An interface and
 implementation part. These are separated by some syntactic marker, (in this
 case `module :private` as `private` is a reserved identifier). However, this
 proposal goes a step further and advocates having a nearly unlimited number of
-so-called *inline module partitions* per file. The authors of this paper argue
+so-called *inline module partitions* per file. The author of this paper argues
 that [[P1242]] should be the minimum interface implemented for C++20, but that
 an alternative superset is available and that's what this proposal discusses.
 
