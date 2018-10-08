@@ -8,7 +8,7 @@ Audience: EWG
 Title: Deprecate The Addressof Operator
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
 Date: 2018-10-07
-URL:
+URL: https://wg21.link/p1305r0
 Abstract: The addressof operator (`&`) might have had its use in being
 Abstract: overloaded, however in practice countless issues have arisen from the 
 Abstract: simple possible case of "but what if someone overloaded it?". This 
