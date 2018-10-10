@@ -1,4 +1,14 @@
-New-Item -ItemType Directory -Force -Path html
+New-Item -ItemType Directory -Force -Path html | out-null
 Get-ChildItem ./proposals/ | %{
-  curl https://api.csswg.org/bikeshed/ -F file='@'$_ -F force=1 > ("html/{0}.html" -f $_.BaseName)
+  $in = $_
+  $number = Get-Content $_ `
+  | Select-String "Shortname: (.*)$" `
+  | %{ $_.Matches } `
+  | %{ $_.Groups[1].Value } `
+  | %{ $_.ToLower() }
+  $out = "html/$number.html"
+  try { $info = Get-Item -ErrorAction Stop $out }
+  catch { $info = $in }
+  if ($_.LastWriteTime -lt $info.LastWriteTime) { return }
+  curl https://api.csswg.org/bikeshed/ -F file='@'$in -F force=1 > $out
 }
