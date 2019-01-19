@@ -1,4 +1,9 @@
 New-Item -ItemType Directory -Force -Path html | out-null
+Get-ChildItem ./drafts/ | %{
+  $in = $_
+  $out = [IO.Path]::ChangeExtension("html/$($_.Name)", "html")
+  curl https://api.csswg.org/bikeshed/ -F file='@'$in -F force=1 > $out
+}
 Get-ChildItem ./proposals/ | %{
   $in = $_
   $number = Get-Content $_ `
