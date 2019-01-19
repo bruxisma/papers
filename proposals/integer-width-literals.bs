@@ -5,13 +5,13 @@ Toggle Diffs: yes
 Group: WG21
 Status: P
 Shortname: P1280
-Revision: 0
+Revision: 1
 Audience: LEWG
 Title: Integer Width Literals
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
 Date: 2018-10-05
-URL: https://wg21.link/P1280R0
-!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fx3gF">P1280R0</a>
+URL: https://wg21.link/P1280R1
+!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fx3gF">P1280R1</a>
 !Current Source: <a href="https://git.io/fx3gX">slurps-mad-rips/papers/proposals/integer-width-literals.bs</a>
 </pre>
 <style>
@@ -20,6 +20,12 @@ del  {background-color: #FFCACA; text-decoration: line-through;}
 </style>
 
 # Revision History # {#changelog}
+
+## Revision 1 ## {#r1}
+
+ * Modify return types to actually be `[u]int_leastXX_t` and friends. This is
+   to make sure that we are actually replacing the `[U]INTxx_C` macros, as
+   these return a `[u]int_leastXX_t`
 
 ## Revision 0 ## {#r0}
 
@@ -81,15 +87,15 @@ The operator's full specification is:
 
 ```c++
 namespace std::inline literals::inline integer_literals {
-  constexpr uint64_t operator ""u64 (unsigned long long arg);
-  constexpr uint32_t operator ""u32 (unsigned long long arg);
-  constexpr uint16_t operator ""u16 (unsigned long long arg);
-  constexpr uint8_t operator ""u8 (unsigned long long arg);
+  constexpr uint_least64_t operator ""u64 (unsigned long long arg);
+  constexpr uint_least32_t operator ""u32 (unsigned long long arg);
+  constexpr uint_least16_t operator ""u16 (unsigned long long arg);
+  constexpr uint_least8_t operator ""u8 (unsigned long long arg);
 
-  constexpr int64_t operator ""i64 (unsigned long long arg);
-  constexpr int32_t operator ""i32 (unsigned long long arg);
-  constexpr int16_t operator ""i16 (unsigned long long arg);
-  constexpr int8_t operator ""i8 (unsigned long long arg);
+  constexpr int_least64_t operator ""i64 (unsigned long long arg);
+  constexpr int_least32_t operator ""i32 (unsigned long long arg);
+  constexpr int_least16_t operator ""i16 (unsigned long long arg);
+  constexpr int_least8_t operator ""i8 (unsigned long long arg);
 }
 ```
 
@@ -129,140 +135,140 @@ The following is wording for the library section.
 <!-- u64 -->
 <xmp highlight="c++">
 namespace std::inline literals::inline integer_literals {
-    constexpr uint64_t operator ""u64 (unsigned long long arg);
+    constexpr uint_least64_t operator ""u64 (unsigned long long arg);
 }
 </xmp>
 
 <ol>
 <li>*Constraints*
 
-  `arg` must fit in the range `arg <= numeric_limits<uint64_t>::max()`
+  `arg` must fit in the range `arg <= numeric_limits<uint_least64_t>::max()`
 </li>
 <li>*Returns*
 
-    An integer of type `uint64_t` with the value given in `arg`
+    An integer of type `uint_least64_t` with the value given in `arg`
 </li>
 </ol>
 
 <!-- u32 -->
 <xmp highlight="c++">
 namespace std::inline literals::inline integer_literals {
-    constexpr uint32_t operator ""u32 (unsigned long long arg);
+    constexpr uint_least32_t operator ""u32 (unsigned long long arg);
 }
 </xmp>
 
 <ol>
 <li>*Constraints*
 
-  `arg` must fit in the range `arg <= numeric_limits<uint32_t>::max()`
+  `arg` must fit in the range `arg <= numeric_limits<uint_least32_t>::max()`
 </li>
 <li>*Returns*
 
-    An integer of type `uint32_t` with the value given in `arg`
+    An integer of type `uint_least32_t` with the value given in `arg`
 </li>
 </ol>
 
 <!-- u16 -->
 <xmp highlight="c++">
 namespace std::inline literals::inline integer_literals {
-    constexpr uint16_t operator ""u16 (unsigned long long arg);
+    constexpr uint_least16_t operator ""u16 (unsigned long long arg);
 }
 </xmp>
 
 <ol>
 <li>*Constraints*
 
-  `arg` must fit in the range `arg <= numeric_limits<uint16_t>::max()`
+  `arg` must fit in the range `arg <= numeric_limits<uint_least16_t>::max()`
 </li>
 <li>*Returns*
 
-    An integer of type `uint16_t` with the value given in `arg`
+    An integer of type `uint_least16_t` with the value given in `arg`
 </li>
 </ol>
 
 <!-- u8 -->
 <xmp highlight="c++">
 namespace std::inline literals::inline integer_literals {
-    constexpr uint8_t operator ""u8 (unsigned long long arg);
+    constexpr uint_least8_t operator ""u8 (unsigned long long arg);
 }
 </xmp>
 
 <ol>
 <li>*Constraints*
 
-  `arg` must fit in the range `arg <= numeric_limits<uint8_t>::max()`
+  `arg` must fit in the range `arg <= numeric_limits<uint_least8_t>::max()`
 </li>
 <li>*Returns*
 
-    An integer of type `uint8_t` with the value given in `arg`
+    An integer of type `uint_least8_t` with the value given in `arg`
 </li>
 </ol>
 
 <xmp highlight="c++">
 namespace std::inline literals::inline integer_literals {
-    constexpr int64_t operator ""i64 (unsigned long long arg);
+    constexpr int_least64_t operator ""i64 (unsigned long long arg);
 }
 </xmp>
 
 <ol>
 <li>*Constraints*
 
-  `arg` must fit in the range `arg <= numeric_limits<int64_t>::max()`
+  `arg` must fit in the range `arg <= numeric_limits<int_least64_t>::max()`
 </li>
 <li>*Returns*
 
-    An integer of type `int64_t` with the value given in `arg`
+    An integer of type `int_least64_t` with the value given in `arg`
 </li>
 </ol>
 
 <xmp highlight="c++">
 namespace std::inline literals::inline integer_literals {
-    constexpr int32_t operator ""i32 (unsigned long long arg);
+    constexpr int_least32_t operator ""i32 (unsigned long long arg);
 }
 </xmp>
 
 <ol>
 <li>*Constraints*
 
-  `arg` must fit in the range `arg <= numeric_limits<int32_t>::max()`
+  `arg` must fit in the range `arg <= numeric_limits<int_least32_t>::max()`
 </li>
 <li>*Returns*
 
-    An integer of type `int32_t` with the value given in `arg`
+    An integer of type `int_least32_t` with the value given in `arg`
 </li>
 </ol>
 
 <xmp highlight="c++">
 namespace std::inline literals::inline integer_literals {
-    constexpr int16_t operator ""i16 (unsigned long long arg);
+    constexpr int_least16_t operator ""i16 (unsigned long long arg);
 }
 </xmp>
 
 <ol>
 <li>*Constraints*
 
-  `arg` must fit in the range `arg <= numeric_limits<int16_t>::max()`
+  `arg` must fit in the range `arg <= numeric_limits<int_least16_t>::max()`
 </li>
 <li>*Returns*
 
-    An integer of type `int16_t` with the value given in `arg`
+    An integer of type `int_least16_t` with the value given in `arg`
 </li>
 </ol>
 
 <xmp highlight="c++">
 namespace std::inline literals::inline integer_literals {
-    constexpr int8_t operator ""i8 (unsigned long long arg);
+    constexpr int_least8_t operator ""i8 (unsigned long long arg);
 }
 </xmp>
 
 <ol>
 <li>*Constraints*
 
-  `arg` must fit in the range `arg <= numeric_limits<int8_t>::max()`
+  `arg` must fit in the range `arg <= numeric_limits<int_least8_t>::max()`
 </li>
 <li>*Returns*
 
-    An integer of type `int8_t` with the value given in `arg`
+    An integer of type `int_least8_t` with the value given in `arg`
 </li>
 </ol>
 
