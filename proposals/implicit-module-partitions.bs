@@ -207,17 +207,19 @@ modules, their *implicit* partitions, and interactions within the filesystem.
 <sup>1</sup>Conformance is required for all vendors whose implementations
 create a final program to be run on the abstract machine
 
-<sup>2</sup>Compilers must provide a flag for users to declare a *module
+<sup>2</sup>Implementations must provide a flag for users to declare a *module
 container* as a filesystem directory.
 
-<sup>3</sup>Compilers must provide a flag for users to declare the name of a
-*module entrypoint*
+<sup>3</sup>Implementations must provide a flag for users to declare the name
+of a *module entrypoint*
 
-<sup>4</sup>Compilers must use a predefined *module entrypoint* if none is
-provided by a user. This entrypoint must be a file with a base name of
-*module*. The extension of the file is currently left unspecified, but should
+<sup>4</sup>Implementations must use a predefined *module entrypoint* if none
+is provided by a user. This entrypoint must be a file with a base name of
+*module*.
+
+(*Note: The extension of the file is currently left unspecified, but should
 be one of the several file extensions that have been historically used. (e.g.,
-`c++`, `cpp`, `cxx`, and `cc`, et. al.)
+`c++`, `cpp`, `cxx`, and `cc`, et. al. *)
 
 <center>**Behavior**</center>
 
