@@ -224,7 +224,7 @@ be one of the several file extensions that have been historically used. (e.g.,
 <center>**Behavior**</center>
 
 <sup>1</sup>In the *module entrypoint*'s *preamble*, when an implementation
-encounters a *module partition* import, it needs to look for an *implicit
+encounters a *module partition* import, it shall look for an *implicit
 module partition* with the same base name as the *module partition*
 
 
