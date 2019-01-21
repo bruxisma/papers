@@ -9,7 +9,7 @@ Revision: 1
 Audience: LEWG
 Title: Integer Width Literals
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
-Date: 2018-10-05
+Date: 2019-01-21
 URL: https://wg21.link/P1280R1
 !Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fx3gF">P1280R1</a>
 !Current Source: <a href="https://git.io/fx3gX">slurps-mad-rips/papers/proposals/integer-width-literals.bs</a>
