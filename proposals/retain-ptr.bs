@@ -93,7 +93,7 @@ Initial Release 🎉
 
 There are a wide variety of C and C++ APIs that rely on reference counting,
 but either because of the language (C) or the age of the library (C++), they
-are unable to be safely use with either `std::unique_ptr<T>` or
+are unable to be safely used with either `std::unique_ptr<T>` or
 `std::shared_ptr<T>`. In the former case, there is no guaranteed way to make
 sure the `unique_ptr` is the last instance (i.e., that it is _unique_), and in
 the latter case, `shared_ptr` manages its own API. In addition, existing
