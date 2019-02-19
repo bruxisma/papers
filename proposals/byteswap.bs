@@ -5,11 +5,11 @@ Toggle Diffs: yes
 Group: WG21
 Status: P
 Shortname: P1272
-Revision: 0
-Audience: SG6, SG14, LEWG
+Revision: 1
+Audience: LWG
 Title: Byteswapping for fun&&nuf
-Editor: Isabella Muerte, Target, isabella.muerte@target.com
-Date: 2018-07-12
+Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
+Date: 2019-02-19
 Repository: slurps-mad-rips/byteswap
 URL: https://wg21.link/P1272R0
 !Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fx3lR">P1272R0</a>
@@ -22,6 +22,13 @@ del  {background-color: #FFCACA; text-decoration: line-through;}
 </style>
 
 # Revision History # {#changelog}
+
+## Revision 1 ## {#r1}
+
+    * Update wording based on feedback from CWG regarding the representation of
+      the "reversed" object.
+    * Readjust wording to use [[N4800]] library wording constructs instead of
+      [[N4672]]
 
 ## Revision 0 ## {#r0}
 
@@ -68,7 +75,8 @@ Where `std::is_integral_v<IntegerType>` is `true`.
 
 # Wording # {#wording}
 
-The following is wording for the library section.
+The following is wording for the library section, to be placed according to the
+editor.
 
 <ins>
 <xmp highlight="c++">
@@ -78,19 +86,12 @@ namespace std {
 }
 </xmp>
 
-<ol>
-<li>*Constraints*
-  This function shall not participate in overload resolution unless:
-  <ul>
-    <li>`std::is_integral_v<IntegerType>` is `true`</li>
-  </ul>
-</li>
-<li>*Returns*
-
-    An object of type `IntegerType` whose representation is in the reverse
-    order of the object representation of `value`.
-</li>
-</ol>
+1. *Constraints*: `std::is_integral_v<IntegerType>` is `true`
+2. *Returns*:
+   <br>
+   <br>
+   An object of type `IntegerType` whose representation is the reverse of the
+   object representation of the parameter `value`.
 </ins>
 
 ## Feature Testing ## {#feature-test}
@@ -100,4 +101,3 @@ The `__cpp_lib_byteswap` feature test macro should be added.
 # Acknowledgement # {#acknowledgement}
 
 Thanks to Nicole Muzzuca for feedback on writing this proposal.
-
