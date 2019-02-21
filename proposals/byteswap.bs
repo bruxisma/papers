@@ -9,16 +9,17 @@ Revision: 1
 Audience: LWG
 Title: Byteswapping for fun&&nuf
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
-Date: 2019-02-19
+Date: 2019-02-21
 Repository: slurps-mad-rips/byteswap
-URL: https://wg21.link/P1272R0
-!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fx3lR">P1272R0</a>
+URL: https://wg21.link/P1272R1
+!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fx3lR">P1272R1</a>
 !Current Source: <a href="https://git.io/fx3l0">slurps-mad-rips/papers/proposals/byteswap.bs</a>
 !Implementation: <a href="https://git.io/fAvWz">slurps-mad-rips/byteswap</a>
 </pre>
 <style>
 ins  {background-color: #CCFFCC; text-decoration: underline;}
 del  {background-color: #FFCACA; text-decoration: line-through;}
+tr.insert { background-color: #CCFFCC; text-decoration: underline; }
 </style>
 
 # Revision History # {#changelog}
@@ -27,6 +28,8 @@ del  {background-color: #FFCACA; text-decoration: line-through;}
 
     * Update wording based on feedback from CWG regarding the representation of
       the "reversed" object.
+    * Update wording based on feedback from LWG regarding subclause location
+      and grammatical changes
     * Readjust wording to use [[N4800]] library wording constructs instead of
       [[N4672]]
 
@@ -75,28 +78,73 @@ Where `std::is_integral_v<IntegerType>` is `true`.
 
 # Wording # {#wording}
 
-The following is wording for the library section, to be placed according to the
-editor.
+The following synopsis is to be added to subclause 25.5.2 <em>Header `<bit>`
+Synopsis</em> [**bit.syn**]:
+
+<pre highlight="c++">
+<em>// 25.5.3, bit_cast</em>
+template &lt;typename To, typename From&gt;
+  constexpr To bit_cast (const From& from) noexcept;
+<ins>
+<em>// 25.5.4, byteswap</em>
+template &lt;class IntegerType&gt;
+  constexpr IntegerType byteswap (IntegerType value) noexcept;
+</ins>
+template &lt;class T&gt;
+  constexpr bool ispow2(T x) noexcept;
+template &lt;class T&gt;
+  constexpr T ceil2(T x) noexcept;
+...
+</pre>
+
+The following is to be placed *before* the current subclause 25.5.4 [**bit.pow.two**] into [**bit.byteswap**]:
 
 <ins>
-<xmp highlight="c++">
-namespace std {
-    template <class IntegerType>
-    constexpr IntegerType byteswap (IntegerType value) noexcept;
-}
-</xmp>
-
-1. *Constraints*: `std::is_integral_v<IntegerType>` is `true`
-2. *Returns*:
-   <br>
-   <br>
-   An object of type `IntegerType` whose representation is the reverse of the
-   object representation of the parameter `value`.
+```cpp
+template <class IntegerType>
+  constexpr IntegerType byteswap (IntegerType value) noexcept;
+```
+<sup>1</sup> *Constraints*: `std::is_integral_v<IntegerType>` is `true`.
+<br>
+<sup>2</sup> *Returns*: An object of type `IntegerType` whose representation is
+the reverse of the object representation of the parameter `value`.
 </ins>
 
 ## Feature Testing ## {#feature-test}
 
-The `__cpp_lib_byteswap` feature test macro should be added.
+In 16.3.1 [**support.limits.general**], Table 36, add a new row below
+`__cpp_lib_byte` with the following content:
+
+<table>
+  <tr>
+    <th>Macro Name<br></th>
+    <th>Value</th>
+    <th>Header(s)<br></th>
+  </tr>
+  <tr>
+    <td>__cpp_lib_byte<br></td>
+    <td>201603L</td>
+    <td>&lt;cstddef&gt;</td>
+  </tr>
+  <tr class="insert">
+    <td>**__cpp_lib_byteswap**</td>
+    <td>**201902L**</td>
+    <td>**&lt;bit&gt;**</td>
+  </tr>
+  <tr>
+    <td>__cpp_lib_char8_t</td>
+    <td>201811L</td>
+    <td>
+      &lt;atomic&gt; &lt;filesystem&gt;
+      <br>
+      &lt;istream&gt; &lt;limits&gt; &lt;locale&gt;
+      <br>
+      &lt;ostream&gt; &lt;string&gt;
+      <br>
+      &lt;string_view&gt;
+    </td>
+  </tr>
+</table>
 
 # Acknowledgement # {#acknowledgement}
 
