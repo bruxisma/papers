@@ -5,11 +5,11 @@ Toggle Diffs: yes
 Group: WG21
 Status: P
 Shortname: P1280
-Revision: 1
+Revision: 2
 Audience: LEWG
 Title: Integer Width Literals
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
-Date: 2019-01-21
+Date: 2019-06-12
 URL: https://wg21.link/P1280R1
 !Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fx3gF">P1280R1</a>
 !Current Source: <a href="https://git.io/fx3gX">slurps-mad-rips/papers/proposals/integer-width-literals.bs</a>
@@ -20,6 +20,11 @@ del  {background-color: #FFCACA; text-decoration: line-through;}
 </style>
 
 # Revision History # {#changelog}
+
+## Revision 2 ## {#r2}
+
+ * Make all functions `consteval` instead of `constexpr` at the recommendation
+   of Alisdair Meredith.
 
 ## Revision 1 ## {#r1}
 
@@ -87,15 +92,15 @@ The operator's full specification is:
 
 ```c++
 namespace std::inline literals::inline integer_literals {
-  constexpr uint_least64_t operator ""u64 (unsigned long long arg);
-  constexpr uint_least32_t operator ""u32 (unsigned long long arg);
-  constexpr uint_least16_t operator ""u16 (unsigned long long arg);
-  constexpr uint_least8_t operator ""u8 (unsigned long long arg);
+  consteval uint_least64_t operator ""u64 (unsigned long long arg);
+  consteval uint_least32_t operator ""u32 (unsigned long long arg);
+  consteval uint_least16_t operator ""u16 (unsigned long long arg);
+  consteval uint_least8_t operator ""u8 (unsigned long long arg);
 
-  constexpr int_least64_t operator ""i64 (unsigned long long arg);
-  constexpr int_least32_t operator ""i32 (unsigned long long arg);
-  constexpr int_least16_t operator ""i16 (unsigned long long arg);
-  constexpr int_least8_t operator ""i8 (unsigned long long arg);
+  consteval int_least64_t operator ""i64 (unsigned long long arg);
+  consteval int_least32_t operator ""i32 (unsigned long long arg);
+  consteval int_least16_t operator ""i16 (unsigned long long arg);
+  consteval int_least8_t operator ""i8 (unsigned long long arg);
 }
 ```
 
@@ -135,7 +140,7 @@ The following is wording for the library section.
 <!-- u64 -->
 <xmp highlight="c++">
 namespace std::inline literals::inline integer_literals {
-    constexpr uint_least64_t operator ""u64 (unsigned long long arg);
+    consteval uint_least64_t operator ""u64 (unsigned long long arg);
 }
 </xmp>
 
@@ -153,7 +158,7 @@ namespace std::inline literals::inline integer_literals {
 <!-- u32 -->
 <xmp highlight="c++">
 namespace std::inline literals::inline integer_literals {
-    constexpr uint_least32_t operator ""u32 (unsigned long long arg);
+    consteval uint_least32_t operator ""u32 (unsigned long long arg);
 }
 </xmp>
 
@@ -171,7 +176,7 @@ namespace std::inline literals::inline integer_literals {
 <!-- u16 -->
 <xmp highlight="c++">
 namespace std::inline literals::inline integer_literals {
-    constexpr uint_least16_t operator ""u16 (unsigned long long arg);
+    consteval uint_least16_t operator ""u16 (unsigned long long arg);
 }
 </xmp>
 
@@ -189,7 +194,7 @@ namespace std::inline literals::inline integer_literals {
 <!-- u8 -->
 <xmp highlight="c++">
 namespace std::inline literals::inline integer_literals {
-    constexpr uint_least8_t operator ""u8 (unsigned long long arg);
+    consteval uint_least8_t operator ""u8 (unsigned long long arg);
 }
 </xmp>
 
@@ -206,7 +211,7 @@ namespace std::inline literals::inline integer_literals {
 
 <xmp highlight="c++">
 namespace std::inline literals::inline integer_literals {
-    constexpr int_least64_t operator ""i64 (unsigned long long arg);
+    consteval int_least64_t operator ""i64 (unsigned long long arg);
 }
 </xmp>
 
@@ -223,7 +228,7 @@ namespace std::inline literals::inline integer_literals {
 
 <xmp highlight="c++">
 namespace std::inline literals::inline integer_literals {
-    constexpr int_least32_t operator ""i32 (unsigned long long arg);
+    consteval int_least32_t operator ""i32 (unsigned long long arg);
 }
 </xmp>
 
@@ -240,7 +245,7 @@ namespace std::inline literals::inline integer_literals {
 
 <xmp highlight="c++">
 namespace std::inline literals::inline integer_literals {
-    constexpr int_least16_t operator ""i16 (unsigned long long arg);
+    consteval int_least16_t operator ""i16 (unsigned long long arg);
 }
 </xmp>
 
@@ -257,7 +262,7 @@ namespace std::inline literals::inline integer_literals {
 
 <xmp highlight="c++">
 namespace std::inline literals::inline integer_literals {
-    constexpr int_least8_t operator ""i8 (unsigned long long arg);
+    consteval int_least8_t operator ""i8 (unsigned long long arg);
 }
 </xmp>
 
