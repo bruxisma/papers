@@ -5,13 +5,13 @@ Toggle Diffs: yes
 Group: WG21
 Status: P
 Shortname: P1272
-Revision: 1
+Revision: 2
 Audience: LWG
 Title: Byteswapping for fun&&nuf
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
-Date: 2019-02-21
+Date: 2019-06-14
 Repository: slurps-mad-rips/byteswap
-URL: https://wg21.link/P1272R1
+URL: https://wg21.link/P1272R2
 !Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fx3lR">P1272R1</a>
 !Current Source: <a href="https://git.io/fx3l0">slurps-mad-rips/papers/proposals/byteswap.bs</a>
 !Implementation: <a href="https://git.io/fAvWz">slurps-mad-rips/byteswap</a>
@@ -23,6 +23,12 @@ tr.insert { background-color: #CCFFCC; text-decoration: underline; }
 </style>
 
 # Revision History # {#changelog}
+
+## Revision 2 ## {#r2}
+
+    * Add missing remarks of undefined behavior in cases such as byteswapping
+      an `IntegerType` such as a bitfield.
+    * Update feature macro value for the Cologne 2019 meeting
 
 ## Revision 1 ## {#r1}
 
@@ -108,6 +114,9 @@ template <class IntegerType>
 <br>
 <sup>2</sup> *Returns*: An object of type `IntegerType` whose representation is
 the reverse of the object representation of the parameter `value`.
+<br>
+<sup>3</sup> *Remarks*: If there is no value of type `IntegerType` corresponding
+to the object representation produced, the behavior is undefined.
 </ins>
 
 ## Feature Testing ## {#feature-test}
@@ -128,7 +137,7 @@ In 16.3.1 [**support.limits.general**], Table 36, add a new row below
   </tr>
   <tr class="insert">
     <td>**__cpp_lib_byteswap**</td>
-    <td>**201902L**</td>
+    <td>**201906L**</td>
     <td>**&lt;bit&gt;**</td>
   </tr>
   <tr>
