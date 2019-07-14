@@ -112,8 +112,7 @@ template <class IntegerType>
 ```
 <sup>1</sup> *Constraints*: `std::is_integral_v<IntegerType>` is `true`.
 <br>
-<sup>2</sup> *Returns*: An object of type `IntegerType` whose representation is
-the reverse of the object representation of the parameter `value`.
+<sup>2</sup> *Returns*: An object of type `IntegerType`. Let the sequence `R` comprise the bytes of the object representation of `value` in reverse order. Each byte in the object representation of the returned object is equal to the byte in the corresponding position in R.
 <br>
 <sup>3</sup> *Remarks*: If there is no value of type `IntegerType` corresponding
 to the object representation produced, the behavior is undefined.
