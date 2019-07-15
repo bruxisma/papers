@@ -12,7 +12,7 @@ Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
 Date: 2019-06-14
 Repository: slurps-mad-rips/byteswap
 URL: https://wg21.link/P1272R2
-!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fx3lR">P1272R1</a>
+!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fx3lR">D1272R3</a>
 !Current Source: <a href="https://git.io/fx3l0">slurps-mad-rips/papers/proposals/byteswap.bs</a>
 !Implementation: <a href="https://git.io/fAvWz">slurps-mad-rips/byteswap</a>
 </pre>
