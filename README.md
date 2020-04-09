@@ -19,27 +19,24 @@ moved to the proposals directory, where they keep their current name.
 |:-------:|:-------------------------------------------:|:-------------------------:|:---------------------------------------------:|
 | [P0468] |           Intrusive Smart Pointer           |        C++23 (UGH)        |                  Sent to LEWG                 |
 | [P1272] |          Byteswapping for fun&&nuf          |           C++20           |                  Sent to LWG                  |
-| [P1273] |       86 The Absurd (From Exceptions)       |         Post C++23        |               Not Yet Presented               |
+| [P1273] |       86 The Absurd (From Exceptions)       |         Post C++23        |           Likely Dead Once Presented          |
 | [P1274] |             A Bang For The Buck?            |           C++23           |               Not Yet Presented               |
 | [P1275] |               Desert Sessions               |          C++23(?)         |              Pending SG16 Papers              |
 | [P1276] |                  Void Main                  | Dependent on Modular Main |                 EWGI Feedback                 |
-| [P1277] |             Subscripts on Parade            |           C++23           |                  EWG Feedback                 |
-| [P1278] |         offsetof for the Modern Era         |           C++23           |               Not Yet Presented               |
-| [P1279] |               std::breakpoint               |           C++23           |               Not Yet Presented               |
+| [P1277] |             Subscripts on Parade            |           C++23           |             Superseded by [P2128]             |
+| [P1278] |         offsetof for the Modern Era         |           C++23           |        Presented Without Author Present       |
+| [P1279] |               std::breakpoint               |           C++23           |               Presented to SG20               |
 | [P1280] |            Integer Width Literals           |           C++20           |                  Sent to LWG                  |
 | [P1281] |             Feature Presentation            |            N/A            |              Withdrawn/Postponed              |
 | [P1282] | Ceci N'est Pas Une Pipe: Workflow Operators |           C++23           |               Not Yet Presented               |
 | [P1283] |              Sharing is Caring              |           C++23           |                 EWGI Feedback                 |
-| [P1302] |       Implicit Module Partition Lookup      |           C++20           |               Not Yet Presented               |
+| [P1302] |       Implicit Module Partition Lookup      |           C++20           |                    Rejected                   |
 | [P1303] |           Inline Module Partitions          |           C++23           | Rejected (Refocusing for Conditional Imports) |
 | [P1304] |           Simplify Extern Template          |           C++23           |        Not Yet Presented (Bad Wording)        |
 | [P1305] |       Deprecate the Addressof Operator      |           C++20           |                    Rejected                   |
 
 # Current Drafts Or Planned Papers
- * [Subtuples and Domtuples]()
- * [std::bag of Tricks]()
- * [Hashtag Blessed]()
- * [VFS]()
+ * [Virtual Filesystem API]()
 
 [bikeshed]: https://github.com/tabatkins/bikeshed
 [P0468]: https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsVI
@@ -59,3 +56,5 @@ moved to the proposals directory, where they keep their current name.
 [P1303]: https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxG9H
 [P1304]: https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxGHv
 [P1305]: https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxGSW
+
+[P2128]: https://wg21.link/P2128
