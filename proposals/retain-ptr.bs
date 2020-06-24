@@ -1,20 +1,20 @@
 <pre class='metadata'>
 Title: An Intrusive Smart Pointer
 Shortname: P0468
-Revision: 1
+Revision: 2
 Audience: LEWG
 Audience: LWG
 Audience: SG1
 Status: P
 Group: WG21
-URL: https://wg21.link/p0468r1
+URL: https://wg21.link/p0468r2
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
-Date: 2018-06-19
+Date: 2020-06-24
 Markup Shorthands: markdown yes
 Abstract: A smart pointer is needed to manage objects with internal reference
 Abstract: counts to reduce maintenance overhead of C and C++ APIs.
 !Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsVI">P0468</a>
-!Current Source: <a href="https://git.io/fxsVq">slurps-mad-rips/papers/proposals/retain-ptr</a>
+!Current Source: <a href="https://github.com/slurps-mad-rips/papers/proposals/retain-ptr">slurps-mad-rips/papers/proposals/retain-ptr</a>
 </pre>
 <style>
 ins  {background-color: #CCFFCC; text-decoration: underline;}
@@ -29,11 +29,38 @@ I'd like to thank the following:
  * Gor Nishanov, whose coroutine slides at CppCon 2016 gave me the final push
     to sit down and write this.
  * Bryce "Wash" Lelbach for representing this paper when I was unable to.
- * Mark Zeren for *constantly* bugging me to see if I might update this paper.
+ * Mark Zeren for _constantly_ bugging me to see if I might update this paper.
  * JF Bastien and Billy O'Neal for assisting me with some atomic operations,
     which I am absolute garbage at.
+ * SG1 for their guidance on the correct atomic operations needed
 
 # Revision History # {#changelog}
+
+## Revision 2 ## {#r2}
+
+This is a major update to the proposal to apply and fix a variety of things
+including but not limited to:
+
+ * Discussing research regarding various approaches to default actions
+ * Feedback from real world users on 'missing' or 'unexpected' behavior
+ * Feedback from SG1 regarding atomic operations
+
+Additionally, some of the motivation, rationale, and explanations have been
+more thoroughly explained.
+
+Lastly a not-so-complete list of changes made so far include
+ * Rebase proposal and wording onto most recent C++20 draft
+ * Added additional examples regarding wrapping OpenSSL
+ * Update atomic operations found within `atomic_reference_count`
+ * `retain_traits::default_action` is now called `retain_traits::reset_action`
+ * `retain_object_t` and `adopt_object_t` have been renamed _back_ to
+    `retain_t` and `adopt_t` until feedback has been given
+ * The _Technical Specification_ section now has some type of actual wording.
+    However, it will not be surprising if Core wants to change a lot of it 🙂
+ * `retain_ptr` is now `constexpr` because WG21 can have little a `constexpr`,
+    as a treat
+ * Removed `static_pointer_cast`, `dynamic_pointer_cast`,
+    `reinterpret_pointer_cast`, `const_pointer_cast`.
 
 ## Revision 1 ## {#r1}
 
@@ -68,7 +95,7 @@ There are a wide variety of C and C++ APIs that rely on reference counting,
 but either because of the language (C) or the age of the library (C++), they
 are unable to be safely use with either `std::unique_ptr<T>` or
 `std::shared_ptr<T>`. In the former case, there is no guaranteed way to make
-sure the `unique_ptr` is the last instance (i.e., that it is *unique*), and in
+sure the `unique_ptr` is the last instance (i.e., that it is _unique_), and in
 the latter case, `shared_ptr` manages its own API. In addition, existing
 intrusive smart pointers such as <a href="https://bit.ly/intrusive-ptr">
 `boost::intrusive_ptr<T>`</a>, <a href="https://bit.ly/com-ptr">Microsoft's
@@ -81,7 +108,7 @@ semantics when interfacing with opaque interfaces.
 
 Those that work on systems or tools that rely on reference counting stand to
 benefit most from `retain_ptr`. Additionally, `retain_ptr` would be a benefit
-to standard library implementers for types that *secretly* use intrusive
+to standard library implementers for types that _secretly_ use intrusive
 reference counting such as a coroutines capable future and promise.
 
 If `retain_ptr` is added to the standard library, the C++ community would also
@@ -120,7 +147,7 @@ construction.
 Additionally, `boost::intrusive_ptr` does not have the ability to "overload"
 its `pointer` type member, requiring some additional work when interfacing with
 C APIs (e.g., `boost::intrusive_ptr<decltype(*declval<cl_mem>())>`). This
-also precludes it from working with types that meet the *NullablePointer* 
+also precludes it from working with types that meet the _NullablePointer_
 named requirements (a feature that `unique_ptr` supports).
 
 Furthermore, `boost::intrusive_ptr` relies on ADL calls of two functions:
@@ -131,15 +158,15 @@ Furthermore, `boost::intrusive_ptr` relies on ADL calls of two functions:
 While this approach is fine in most cases, it does remove the ability to easily
 "swap out" the actions taken when increment or decrementing the reference count
 (e.g., setting a debugger breakpoint on a specific traits implementation, but
-not on *all* traits implementations). This naming convention uses terms found
+not on _all_ traits implementations). This naming convention uses terms found
 in Microsoft's COM. While this isn't an issue per se, it would be odd to have
 functions with those names found in the standard.
 
 ## Why is it called `retain_ptr` and not `intrusive_ptr`? ## {#faq-2}
 
-`retain_ptr` diverges from the design of `boost::intrusive_ptr`. It was decided
-to change the name so as to not cause assumptions of `retain_ptr`'s interface
-and behavior.
+`retain_ptr` diverges from the design of `boost::intrusive_ptr`. The author
+decided to change the name so as to not cause assumptions of `retain_ptr`'s
+interface and behavior.
 
 Some additional names that might be considered (for bikeshedding) are:
 
@@ -153,41 +180,52 @@ Comedy Option:
 
  * `auto_ptr`
 
+However, in practice, `retain_ptr` has been a fairly expressive name thus far.
+
 ## Is `retain_ptr` atomic? ## {#faq-3}
 
 `retain_ptr` is only atomic in its reference count increment and decrements
-if the object it manages is itself atomic in its reference count operations.
+if the object it manages is _itself_ atomic in its reference count operations.
 
 ## Does `retain_ptr` support allocators? ## {#faq-4}
 
 `retain_ptr` itself does not support allocators, however the object whose
-lifetime it extends can.
-
+lifetime it extends can, much in the same way that `unique_ptr` does not
+support allocators, but it's `Deleter` template parameter is more than able to
+do so.
 
 ## Can `retain_ptr` be constexpr? ## {#faq-5}
 
-Possibly. However, I question the usefulness for a constexpr capable intrusive
-smart pointer, as most use cases are intended for non-constexpr capable
-interfaces such as incomplete types and polymorphic classes. Additionally,
-`retain_ptr` allows one to utilize value semantics on C and C++ APIs. If this
-is desired in a constexpr context, one can simply use constexpr values (i.e.,
-reference counting is not a necessary aspect of constexpr)
+Yes.
 
-## Does `retain_ptr` adopt or retain an object on construction? ## {#faq-7}
+## Does `retain_ptr` adopt or retain an object on construction and reset? ## {#faq-7}
 
-The default action that `retain_ptr` takes on construction or reset is
-determined by the `traits_type` for the `retain_ptr`. If the traits type
-has a member named `default_action`, the `retain_ptr` will use that to delegate
-to the correct constructor. If there is no type alias member named
-`default_action`, the default operation is to *adopt* the object (i.e., it
-does not increment the reference count during its construction). The
-`default_action` type alias *must* be either `adopt_object_t` or
-`retain_object_t`.
+Thus far there is no consensus between all of the existing APIs that have come
+before `retain_ptr` on whether we should adopt or retain by default.
+_Currently_, the policy the paper, its implementation, and its author takes is
+to _adopt_ the incoming object by default, and require _explicit_ retain
+operations when resetting with a new value or constructing an object.
 
-## Why provide `retain_object_t` and `adopt_object_t`? ## {#faq-8}
+Unsurprisingly, this has been a point of contention. Thus far the following
+feedback has been given
 
-`retain_object_t` and `adopt_object_t` act as sentinel types to provide
-explicit requests to either *extend* or *adopt* an object when constructing
+ * We should retain by default
+ * We should adopt by default
+ * We should do neither and only allow explicit calls for both.
+
+A decision _must_ be made regarding this approach, as it will affect behavior
+of APIs and systems for years to come and we must, in the author's opinion, get
+it right on the first try. See the [[#rationale]] for a more detailed
+discussion.
+
+It should, however, be noted that a user desiring a _specific behavior_ by
+default can place `using reset_action = adopt_t` or `using reset_action =
+retain_t` in their traits type.
+
+## Why provide `retain_t` and `adopt_t`? ## {#faq-8}
+
+`retain_t` and `adopt_t` act as sentinel types to provide
+explicit requests to either _extend_ or _adopt_ an object when constructing
 or resetting a `retain_ptr`. This mostly comes into play when interacting
 with APIs that return a borrowed (rather than a new) reference to an object
 without increment its reference count.
@@ -198,10 +236,11 @@ library. Using a boolean parameter, as found in `boost::intrusive_ptr` is
 unsatisfactory and does not help describe the operation the user is requesting.
 
 The names of these sentinels are available for bikeshedding. Some other
-possible names for `retain_object_t` include:
+possible names for `retain_t` include:
 
  * `retain_element_t`
  * `extend_element_t`
+ * `retain_object_t`
  * `retainobj_t`
  * `extendobj_t`
 
@@ -211,6 +250,7 @@ While `adopt_object_t` names include:
  * `borrow_element_t`
  * `borrowobj_t`
  * `adopt_element_t`
+ * `adopt_object_t`
  * `adoptobj_t`
 
 ## Does `retain_ptr` overload the addressof operator? ## {#faq-9}
@@ -220,7 +260,7 @@ require an overload for the addressof `operator &`. This was, with absolutely
 no surprise, contentious and asked to be removed. However, Microsoft's
 `ComPtr<T>` overloads the addressof operator for initializing it via C APIs
 (i.e., APIs which initialize a pointer to a pointer). Since then, JeanHyde
-Meneide's *out_ptr* proposal [[P1132]] was written and thus solves this slight
+Meneide's _out_ptr_ proposal [[P1132]] was written and thus solves this slight
 issue.
 
 ## Can `retain_traits` store state? ## {#faq-10}
@@ -228,6 +268,9 @@ issue.
 No. Any important state regarding the object or how it is retained, can be
 stored in the object itself. For example, if the reference count needs to be
 external from the object, `std::shared_ptr` would be a better choice.
+
+This is in line with the rest of the standard library. (For example,
+`std::pointer_traits` does not store state)
 
 ## Why not just wrap a `unique_ptr` with a custom deleter? ## {#faq-11}
 
@@ -299,7 +342,7 @@ private:
 As we can see, using `retain_ptr` saves effort, allowing us in most cases to
 simply rely on the "rule of zero" for constructor management. It will also not
 confuse/terrify maintainers of code bases where objects construct a
-`unique_ptr` with the raw pointer of another (and *unique ownership* is not
+`unique_ptr` with the raw pointer of another (and _unique ownership_ is not
 transferred).
 
 # Examples # {#examples}
@@ -311,6 +354,7 @@ Some C APIs that would benefit from `retain_ptr<T>` are
  * CPython
  * ObjC Runtime
  * Grand Central Dispatch
+ * OpenSSL
 
 Inside the [[implementation]] repository is an extremely basic example of using
 `retain_ptr` with Python.
@@ -334,7 +378,6 @@ struct context {
 private:
   handle_type handle;
 };
-
 ```
 
 ## ObjC Runtime ## {#examples-objc}
@@ -350,6 +393,23 @@ struct objc_traits {
   using pointer = CFTypeRef;
   static void increment (pointer p) { CFRetain(p); }
   static void decrement (pointer p) { CFRelease(p); }
+};
+```
+
+## OpenSSL ## {#examples-openssl}
+
+What some might find surprising is that most of the well known OpenSSL library
+is reference counted.
+
+```cpp
+template <> std::retain_traits<SSL> {
+  static void increment (SSL* ptr) noexcept { SSL_up_ref(ptr); }
+  static void decrement (SSL* ptr) noexcept { SSL_free(ptr); }
+};
+
+struct connection {
+private:
+  std::retain_ptr<SSL> handle;
 };
 ```
 
@@ -410,62 +470,62 @@ RefPtr<Node> node = adoptRef(rawNodePointer);
 ```
 
 ```cpp
-auto node = retain_ptr<Node>(rawNodePointer, adopt_object);
+auto node = std::retain_ptr<Node>(rawNodePointer, std::adopt);
 ```
 
 # Technical Specification # {#specification}
 
-A *retain pointer* is an object that extends the lifetime of another object
+A _retain pointer_ is an object that extends the lifetime of another object
 (which in turn manages its own dispostion) and manages that other object
-through a pointer. Specifically, a retain pointer is an object *r* that stores
-a pointer to a second object *p* and will cease to extend the lifetime of *p*
-when *r* is itself destroyed (e.g., when leaving a block scope). In this
-context, *r* is said to *retain* ``p``, and *p* is said to be a *self disposing
-object*.
+through a pointer. Specifically, a retain pointer is an object _r_ that stores
+a pointer to a second object _p_ and will cease to extend the lifetime of _p_
+when _r_ is itself destroyed (e.g., when leaving a block scope). In this
+context, _r_ is said to _retain_ ``p``, and _p_ is said to be a _self disposing
+object_.
 
-When *p*'s lifetime has reached its end, *p* will dispose of itself as it sees
-fit. The conditions regarding *p*'s lifetime is handled by some count *c* that
-*p* comprehends, but is otherwise not directly accessible to *r*.
+When _p_'s lifetime has reached its end, _p_ will dispose of itself as it sees
+fit. The conditions regarding _p_'s lifetime is handled by some count _c_ that
+_p_ comprehends, but is otherwise not directly accessible to _r_.
 
-The mechanism by which *r* retains and manages the lifetime of *p* is known as
-*p*'s associated *retainer*, a stateless object that provides mechanisms for
-*r* to increment, decrement, and (optionally) provide access to *c*. In this
-context, *r* is able to *increment* ``c``, *decrement* ``c``, or access the *c*
-of *p*.
+The mechanism by which _r_ retains and manages the lifetime of _p_ is known as
+_p_'s associated _retainer_, a stateless object that provides mechanisms for
+_r_ to increment, decrement, and (optionally) provide access to _c_. In this
+context, _r_ is able to _increment_ ``c``, _decrement_ ``c``, or access the _c_
+of _p_.
 
-Let the notation *r.p* denote the pointer stored by *r*. Upon request, *r* can
-explicitly choose to increment *c* when *r.p* is replaced.
+Let the notation _r.p_ denote the pointer stored by _r_. Upon request, _r_ can
+explicitly choose to increment _c_ when _r.p_ is replaced.
 
-Additionally, *r* can, upon request, *transfer ownership* to another retain
-pointer *r2*. Upon completion of such a transfer, the following postconditions
+Additionally, _r_ can, upon request, _transfer ownership_ to another retain
+pointer _r2_. Upon completion of such a transfer, the following postconditions
 hold:
 
- - *r2.p* is equal to the pre-transfer *r.p*, and
- - *r.p* is equal to ``nullptr``
+ - _r2.p_ is equal to the pre-transfer _r.p_, and
+ - _r.p_ is equal to ``nullptr``
 
-Furthermore, *r* can, upon request, *extend ownership* to another retain
-pointer *r2*. Upon completion of such an extension, the following
+Furthermore, _r_ can, upon request, _extend ownership_ to another retain
+pointer _r2_. Upon completion of such an extension, the following
 postconditions hold:
 
- - *r2.p* is equal to *r.p*
- - *c* has been incremented by 1
+ - _r2.p_ is equal to _r.p_
+ - _c_ has been incremented by 1
 
 Each object of a type ``U`` instantiated from the ``retain_ptr`` template
 specified in this proposal has the lifetime extension semantics specified
 above of a retain pointer. In partical satisfaction of these semantics, each
 such ``U`` is ``MoveConstructible``, ``MoveAssignable``, ``CopyConstructible``
 and ``CopyAssignable``. The template parameter ``T`` of ``retain_ptr`` may be
-an incomplete type. (*Note: The uses of* ``retain_ptr`` *include providing
+an incomplete type. (_Note: The uses of_ ``retain_ptr`` _include providing
 exception safety for self disposing objects, extending management of self
 disposing objects to a function, and returning self disposing objects from a
-function.*)
+function._)
 
 ```cpp
 class atomic_reference_count<T>;
 class reference_count<T>;
 
-class retain_object_t;
-class adopt_object_t;
+class retain_t;
+class adopt_t;
 
 template <class T> struct retain_traits;
 
@@ -474,24 +534,23 @@ template <class T, class R = retain_traits<T>> class retain_ptr;
 template <class T, class R>
 void swap (retain_ptr<T, R>& x, retain_ptr<T, R>& y) noexcept;
 
-template <class T, class R, class U>
-retain_ptr<T, R> dynamic_pointer_cast (retain_ptr<U, R> const&) noexcept;
+template <class T1, class R1, class T2, class R2>
+requires three_way_comparaible_with<
+  typename retain_ptr<T1, R1>::pointer,
+  typename retain_ptr<T2, R2>::pointer
+> compare_three_way_result_t<
+  typename retain_ptr<T1, R1>::pointer,
+  typename retain_ptr<T2, R2>::pointer
+> operator <=> (retain_ptr<T1, R2> const& x, retain_ptr<T2, R2> const& y);
 
-template <class T, class R, class U>
-retain_ptr<T, R> static_pointer_cast (retain_ptr<U, R> const&) noexcept;
-
-template <class T, class R, class U>
-retain_ptr<T, R> const_pointer_cast (retain_ptr<U, R> const&) noexcept;
-
-template <class T, class R, class U>
-retain_ptr<T, R> reinterpret_pointer_cast (retain_ptr<U, R> const&) noexcept;
-
-template <class T, class R, class S=R>
-strong_ordering operator <=> (retain_ptr<T, R> const& x, retain_ptr<T, S> const& y) noexcept;
-template <class T, class R>
-strong_ordering operator <=> (retain_ptr<T, R> const& x, nullptr_t) noexcept;
-template <class T, class R>
-strong_ordering operator <=> (nullptr_t, retain_ptr<T, R> const& y) noexcept;
+template <class T1, class R1>
+requires three_way_comparaible_with<
+  typename retain_ptr<T1, R1>::pointer,
+  nullptr
+> compare_three_way_result_t<
+  typename retain_ptr<T1, R1>::pointer,
+  nullptr
+> operator <=> (retain_ptr<T1, R2> const& x, std::nullptr_t);
 ```
 
 ## `atomic_reference_count<T>` and `reference_count<T>` ## {#wording-mixins}
