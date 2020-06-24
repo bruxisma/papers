@@ -36,7 +36,7 @@ moved to the proposals directory, where they keep their current name.
 | [P1305] |       Deprecate the Addressof Operator      |           C++20           |                    Rejected                   |
 
 # Current Drafts Or Planned Papers
- * [Virtual Filesystem API]()
+ * Target Tuplets
 
 [bikeshed]: https://github.com/tabatkins/bikeshed
 [P0468]: https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsVI

@@ -24,13 +24,13 @@ del  {background-color: #FFCACA; text-decoration: line-through;}
 ## Revision 2 ## {#r2}
 
  * Make all functions `consteval` instead of `constexpr` at the recommendation
-   of Alisdair Meredith.
+    of Alisdair Meredith.
 
 ## Revision 1 ## {#r1}
 
  * Modify return types to actually be `[u]int_leastXX_t` and friends. This is
-   to make sure that we are actually replacing the `[U]INTxx_C` macros, as
-   these return a `[u]int_leastXX_t`
+    to make sure that we are actually replacing the `[U]INTxx_C` macros, as
+    these return a `[u]int_leastXX_t`
 
 ## Revision 0 ## {#r0}
 

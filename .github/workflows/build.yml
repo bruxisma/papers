@@ -1,0 +1,25 @@
+name: Build WG21 Proposals
+on: push
+jobs:
+  build:
+    name: Build WG21
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.7'
+      - name: Install Bikeshed
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade bikeshed
+      - name: Update Bikeshed
+        run: bikeshed update
+      - name: Install Utilities
+        run: cargo install ripgrep
+      - name: Build Documents
+        run: make html
