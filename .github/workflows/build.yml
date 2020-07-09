@@ -47,4 +47,4 @@ jobs:
       - name: Update Bikeshed
         run: bikeshed update
       - name: Build Documents
-        run: make --jobs
+        run: make --jobs --just-print && exit 1
