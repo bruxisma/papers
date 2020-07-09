@@ -33,7 +33,8 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: '3.x'
-      - name: actions/cache@v2
+      - name: Check Python Cache
+        uses: actions/cache@v2
         with:
           path: ~/.cache/pip
           key: ${{ runner.os}}-pip-${{ hashFiles('**/requirements.txt') }}
