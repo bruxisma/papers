@@ -1,4 +1,4 @@
-name: Build WG21 Proposals
+name: Build Proposals
 on: push
 jobs:
   build:
@@ -47,4 +47,4 @@ jobs:
       - name: Update Bikeshed
         run: bikeshed update
       - name: Build Documents
-        run: make --jobs --just-print && exit 1
+        run: make --jobs
