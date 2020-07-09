@@ -32,6 +32,7 @@ proposals = $(wildcard src/*.bs)
 targets = $(foreach filename,${proposals},$(call extract-name,${filename}))
 
 $(foreach target,$(targets),$(eval $(call bikeshed-target,$(subst :, ,$(target)))))
+$(foreach target,$(targets),$(info $(call bikeshed-target,$(subst :, ,$(target)))))
 
 all: $(BIKESHED_PAGES)
 $(BIKESHED_PAGES): $(HTMLDIR)
