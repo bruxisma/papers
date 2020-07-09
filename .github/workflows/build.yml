@@ -20,7 +20,7 @@ jobs:
               owner: 'BurntSushi',
               repo: 'ripgrep'
             });
-            const asset = release.assets.find((asset) => { asset.content_type === mimetype });
+            const asset = release.assets.find((asset) => asset.content_type === mimetype);
             if (asset === undefined) {
               core.setFailed(`Could not determine .deb package for ${release.name}`);
             }
