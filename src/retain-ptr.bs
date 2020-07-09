@@ -29,10 +29,13 @@ I'd like to thank the following:
  * Gor Nishanov, whose coroutine slides at CppCon 2016 gave me the final push
     to sit down and write this.
  * Bryce "Wash" Lelbach for representing this paper when I was unable to.
- * Mark Zeren for _constantly_ bugging me to see if I might update this paper.
- * JF Bastien and Billy O'Neal for assisting me with some atomic operations,
-    which I am absolute garbage at.
- * SG1 for their guidance on the correct atomic operations needed
+ * Mark Zeren for *constantly* bugging me to see if I might update this paper.
+ * JF Bastien and Billy O'Neal for assisting me via Twitter with some atomic
+    operations.
+ * SG1 at San Diego 2018 for their guidance on the correct atomic operations
+    needed.
+ * The vast number of people in the C++ community who have patiently been
+    waiting for this type to be added to the standard.
 
 # Revision History # {#changelog}
 
@@ -42,7 +45,7 @@ This is a major update to the proposal to apply and fix a variety of things
 including but not limited to:
 
  * Discussing research regarding various approaches to default actions
- * Feedback from real world users on 'missing' or 'unexpected' behavior
+ * Feedback from real world users on missing or unexpected behavior
  * Feedback from SG1 regarding atomic operations
 
 Additionally, some of the motivation, rationale, and explanations have been
@@ -215,8 +218,7 @@ feedback has been given
 
 A decision _must_ be made regarding this approach, as it will affect behavior
 of APIs and systems for years to come and we must, in the author's opinion, get
-it right on the first try. See the [[#rationale]] for a more detailed
-discussion.
+it right on the first try. 
 
 It should, however, be noted that a user desiring a _specific behavior_ by
 default can place `using reset_action = adopt_t` or `using reset_action =
@@ -652,7 +654,7 @@ expressions `R::increment(ptr)` and `R::decrement(ptr)` are valid and has the
 effect of retaining or disposing of the pointer as appropriate for that
 retainer.
 
-If the *qualified-id* `R::pointer` is valid and denotes a type, then
+If the _qualified-id_ `R::pointer` is valid and denotes a type, then
 `retain_ptr<T, R>::pointer` shall be synonymous with `R::pointer`. Otherwise
 `retain_ptr<T, R>::pointer` shall be a synonym for `element_type*`. The type
 `retain_ptr<T, R>::pointer` shall satisfy the requirements of

@@ -1,28 +1,39 @@
 MAKEFLAGS += --no-builtin-rules
 BIKESHED ?= bikeshed
-HTMLDIR ?= html
-VPATH = proposals:drafts
+HTMLDIR ?= build
+BIKESHED_PAGES =
 
-EXTRACT = rg --no-line-number --no-filename 'Shortname: (P.*)$$' --replace '$$1'
-
-ifeq ($(OS),Windows_NT)
-RM = del /q
-else
-RM = rm -r
-endif
-
+.DEFAULT_GOAL ::= all
 .PHONY: all clean
-.SUFFIXES: .bs .html
 
-proposals := $(notdir $(patsubst %.bs,%.html,$(wildcard proposals/*.bs)))
+EXTRACT = rg --no-line-number --with-filename 'Shortname: ([PD].*)$$' --replace '$$1'
+RM = $(if $(OS),rd /S /Q,rm -r)
 
-html = $(addprefix $(HTMLDIR)/,$(proposals))
+GITHUB_REPOSITORY ?= slurps-mad-rips/papers
+GITHUB_SHA ?= HEAD
 
-all: $(html)
+BIKESHEDFLAGS += --md-local-boilerplate="computed-metadata yes"
+BIKESHEDFLAGS += --md-text-macro="GITHUB-REPOSITORY $(GITHUB_REPOSITORY)"
+BIKESHEDFLAGS += --md-text-macro="GITHUB-SHA $(GITHUB_SHA)"
 
-$(html): $(HTMLDIR)/%.html: %.bs | $(HTMLDIR)
-	@$(BIKESHED) spec --gh-token "$(GITHUB_TOKEN)" $< $@
-	$(info $(shell ${EXTRACT} $<) $(@F))
+BOILERPLATE := $(wildcard src/*.include)
+
+define bikeshed-target =
+$$(HTMLDIR)/$(lastword $(1)).html: BIKESHEDFLAGS += --md-text-macro="FILENAME $$<"
+$$(HTMLDIR)/$(lastword $(1)).html: $(firstword $(1)) | $$(HTMLDIR) $$(BOILERPLATE)
+	$$(BIKESHED) spec --gh-token "$$(GITHUB_TOKEN)" $$< $$@ $$(BIKESHEDFLAGS)
+	$$(info [BIKE]: $$(basename $$(@F)) -- $$(<F))
+BIKESHED_PAGES += $$(HTMLDIR)/$(lastword $(1)).html
+endef
+
+extract-name = $(shell ${EXTRACT} $(1))
+proposals = $(wildcard src/*.bs)
+targets = $(foreach filename,${proposals},$(call extract-name,${filename}))
+
+$(foreach target,$(targets),$(eval $(call bikeshed-target,$(subst :, ,$(target)))))
+
+all: $(BIKESHED_PAGES)
+$(BIKESHED_PAGES): $(HTMLDIR)
 
 $(HTMLDIR):
 	@mkdir $@

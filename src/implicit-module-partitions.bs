@@ -184,7 +184,7 @@ In the above layout, `core.io` is located in `./io`, rather than under the
 `core.io` resides under `./io` and not to rely on some kind of hierarchical
 directory layout.
 
-# Wording
+# Wording # {#wording}
 
 The following is to be placed into the current working draft at a location
 within close proximity to, or adjacent to, the current merged modules wording:

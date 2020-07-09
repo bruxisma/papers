@@ -1,0 +1,272 @@
+<pre class='metadata'>
+Markup Shorthands: markdown yes
+No Abstract: yes
+Group: WG21
+Status: P
+Shortname: P1864
+Revision: 0
+Audience: SG15
+Title: Defining Target Tuplets
+Editor: Isabella Muerte, imuerte@hey.com
+Date: 2020-07-08
+Local Boilerplate: computed-metadata yes
+</pre>
+<script type="text/javascript" src="http://livejs.com/live.js"></script>
+
+# Revision History # {#changelog}
+
+## Revision 0 ## {#r0}
+
+    Initial release. 🎉
+
+# Motivation # {#motivation}
+
+One of the more difficult things in the vast breadth of build systems is
+declaring what system architecture, vendor, operating system, and environment
+is used when compiling for a given platform. In some cases, these names are
+chosen at random by various implementations and differ from each vendor. While
+some time ago these would have been called "Target Triples", in practice they
+have been "Target Tuplets".
+
+This paper aims to define and describe the concept of a target tuplet and how
+they can be consumed by build systems, toolchains, and users alike. This paper
+*does not* attempt to define or limit existing target tuplets and instead
+defers this "definition list" to a separate Standing Document. The reason for
+this is that updating target tuplets with a Technical Report or Standard
+requires several years to be updated and voted in. This model can't react to
+changes in existing practices, while a Standing Document can be updated at each
+plenary vote, or simply be updated by an editor, and published at will.
+
+This paper might give examples of existing target tuplets, but this is for
+demonstration purposes and not to be taken as a guarantee that the tuplet will
+exist in such a form in the future.
+
+Lastly, this paper also does not attempt to define a *sysroot*. That may or may
+not be defined by a future separate paper.
+
+## Why Tuplet instead of Triplet or Tuple? ## {#tuplet}
+
+Traditionally, a target tuplet has been called a *triplet*, as this referred to
+the *architecture*, the *operating system*, and the *environment*. However, as time
+has gone on, a 4th field was added, while the name *triplet* was kept. While
+the author is not a verified expert on the English language, *triple* and the
+*number 4* do not mean the same thing.
+
+Additionally, C++ has the concept of a `std::tuple`. The author opted to select
+the term *tuplet* to remove any possibly ambiguity regarding discussions of
+the definition found within this proposal.
+
+Lastly, the `-et` and `-ette` suffixes are used to describe something small
+(e.g., a cas*ette* is a small case). However, `-et` also means a group or
+grouping, such as in the definition of oct*et*. A target tuplet is a grouping
+of several elements regarding a target, hence the use of the term *tuplet* and
+not *tuplette*.
+
+# Design Considerations # {#design}
+
+A target tuplet is written (in utf-8) as a series of words (text), delimited
+via a "hyphen-minus" (&#45;). The current layout of a target tuplet is borrowed
+from [[clang-cross-compile|clang]], as other compilers tend to support this
+layout but also provide alternative layouts that are incompatible with clang or
+each other.
+
+Typically, a target tuplet *does not* infer floating point ABI, processor
+specific intrinsics, or FPU specific intrinsics. These are more granular and
+defining them at a broad scope is, in the authors opinion, fruitless.
+
+Lastly, a target tuplet can be considered "ill-formed, no diagnostic required"
+if an incorrect sequence is put together and passed to the compiler. For
+example, specifying `mips-ibm-cuda-macho` as a target would most likely not
+work in any existing compiler (at the time of this writing).  Instead, it is up
+to users and build systems to ensure that these incorrect sequences do not make
+their way to the compiler. This differs from clang's approach, which is to
+convert any unrecognized entries as `unknown`, and then infer specifics.
+
+# Wording # {#wording}
+
+## Terms and Definitions ## {#terms-and-definitions}
+
+<sup>1</sup>
+
+: rectify
+:: words
+
+<blockquote>
+<sup>1</sup>A *target* is the architecture, environment, and operating system (or
+lack thereof) a compiler is generating code for.
+
+<sup>2</sup>A *target tuplet entry* or *entry* is defined as a UTF-8 sequence,
+also known colloquially as a word.
+
+<sup>3</sup>A *target tuplet* is defined as a four entries, delimited via
+a hyphen-minus (&#45;).
+
+<sup>4</sup>A *supplied target tuplet* is a sequence of entries,
+delimited via a hyphen-minus (&#45;), with a minimum of one entry, and a
+maximum of four entries.
+
+<sup>5</sup>An *environment* is a combination of any set of loadable program
+format (e.g., COFF, MACH-O, ELF, PTX), ABI (`gnu`, `gnueabi`), or runtime
+(`msvc`, `cygwin`). A runtime is a superset of an ABI. An ABI is a superset of
+a loadable program format.
+
+<sup>6</sup>When a *supplied target tuplet* is provided to a compiler, or build
+system, the missing entries are to be filled in with the catch-all element
+`unknown`.
+
+<sup>7</sup>When a compiler is given a *target tuplet* that it is unable to 
+rectify or target, the compiler will treat the invocation as ill-formed, no
+diagnostic required.
+
+<sup>8</sup>When a build system is given a *target tuplet* that it is unable to
+rectify or target, the build system is to alert the user at the earliest
+possible time that the compiler cannot be safely invoked in such a manner.
+
+<sup>9</sup>The first entry in a *target tuplet* is to specify the
+*architecture* that the compiler will be targeting. Details about which
+specific processor under this architecture are *not* to be defined.
+**Revisions** of the architecture are permitted to be attached (e.g., `arm`,
+`armv6`, `armv7a`), but only if the architecture is defined as having
+revisions.
+
+<sup>10</sup>The second entry in a *target tuplet* is to specify the *vendor*
+that has provided the given toolchain. This field is optional, as open source
+compilers can have a theoretically infinite number of vendors, one per each
+person compiling it. A *target tuplet* may indicate the lack of a vendor by
+using the specifier *none*. It is highly recommended that compiler vendors have
+a specific name for this field, to differentiate between similar compilers
+provided by different vendors.
+
+<sup>11</sup>The third entry in a *target tuplet* is to specify the *operating
+system* that is being targeted. In the event that the target is devoid of an
+operating system, the bare metal specifier *none* is to be used.
+
+<sup>12</sup>The fourth entry in a *target tuplet* is to specify the
+*environment* being targeted. This can include ELF, Mach-O, COFF, GNU, and
+others. The specifics of the environment being targeted do not matter, simply
+that there is an environment for the compiler to target
+
+<sup>13</sup>A catch-all entry named `unknown` may be used in a *supplied
+target tuplet* to allow toolchain specific information to be inferred by the
+build system.
+
+</blockquote>
+
+# Informative Explanation # {#explanation}
+
+The road to get to the point where we can have a definition of a target tuplet
+has been a long one. There are many platforms, processors, toolchains, external
+tools, build systems, and configurations to consider and many of these are
+older than Standard C++ by almost a decade (The initial release of C++ in 1985
+was during the beginning of very early stages of this "wild west" of cross
+compilation). This section is intended to explain some of the decisions made
+with wording, as well as some of the history of how we ended up at the point we
+are currently at. Additionally, a lot of work was done to formalize some of the
+wording and to "
+
+## A Brief History of Compiler Targets ## {#brief-history}
+
+Many older compilers are no longer available. Their source code, binaries,
+documentation, etc. are either lost to time, or require vast sums of money to
+gain access to. As such, the author only had GCC, a few non-triplet configured
+C compilers, and a handful of usenet postings to go off of for the information
+located here.
+
+Note: This portion of the document is not meant to be a "Howard Zinn-esque"
+retelling of how target tuplets came to be.
+
+Before autotools, GCC's early releases used simple shell scripts that were
+written by hand. The changelog was only a small file with a few notes, and
+some light information on how to configure the build for porting to new
+platforms. These files were labelled `config-<processor>`, as the ability to
+target a specific toolchain wasn't really a possibility at the time. As time
+went on, the number of targets that GCC could run on or target grew. This is
+when the first set of target triplets were created. At the time, the second
+field of a triplet was what is now the *third entry* in a target tuplet. At
+some point, an optional *vendor* field was created. In the wild, some might be
+familiar with the "triplet" of `x86_64-none-linux-gnu`, which is also sometimes
+represented as `x86_64-unknown-linux-gnu` or `x86_64-pc-linux-gnu`. A list of
+wildcard host/targets is [[gcc-host-target|provided by GCC]].
+
+Because of the success of GCC, this form of targeting a platform became the *de
+facto* way of defining a target. GCC also added several aliases over the years
+(e.g., permitting `*-*-*-linux` to mean `*-*-*-elf` on some platforms), which
+led to a bit of confusion on how to target a platform. Once Clang supported
+targets, they did not provide aliases, which reduced the surface area for
+confusion.
+
+## Why Vendor Over Machine ## {#vendor}
+
+At the Denver 2019-09 SG15 meeting, the author was recommended via a poll
+result to investigate naming conventions for the second entry as to whether it
+should be *vendor* or *machine*. After some time, it became clear that the
+*vendor* entry has always been for vendors. The use of `*-pc-*` was taken
+instead to mean "IBM Compatible PC", back when that used to mean something.
+
+However, when users have taken to think the second entry is a machine,
+operating system, or platform, the compiler has effectively *normalized* the
+second field to either be `unknown` or something else. Thus, using *machine*
+does not work well, as the wording above states that *vendor* is optional in a
+*supplied target tuplet*.
+
+## Why environment over X ## {#environment}
+
+Some other names came up during discussion of the fourth field. These included,
+`runtime`, `ABI`, etc. In actuality, this last field has historically been
+where everything is thrown into one place to differentiate the compiler's
+target from effectively everything else. In practice, however, there is a
+hierarchy implied by *what* is in this field.
+
+If an object file format, such as `PE`, `COFF`, `a.out`, `Mach-O`, or `ELF` is
+given, it typically implies that there are 0 or 1 default vendor specific ABI
+or runtime available. In other words, these *could* be freestanding compiler
+targets, or there is only one possible runtime provided by the compiler.  e.g.,
+in the case of `*-apple-*-macho`, there is only ONE ABI and runtime available,
+and it is provided by Apple, with the object file format being `Mach-O`. In the
+case of a `*-apple-*-coff`, there is still only ONE ABI and runtime available,
+but the object file format is now different.
+
+A level above this, is an ABI. e.g., `gnu`, or `msvc`. These imply all of:
+
+ * an object file format (e.g., ELF and PE/COFF)
+ * 1 or more calling conventions for symbols within the object file format
+ * multiple runtimes that can co-exist on a given platform.
+
+This is why, for the uninformed, MinGW and MSVC cannot link against each other
+unless it is done via C and unless the "symbols" agree upon calling convention.
+
+Above this, we have *runtimes*. These have all of:
+
+ * A specific object file format
+ * An ABI for storing precompiled object file formats
+ * 1 or more libraries needed for a program to load without issue.
+
+As an example, `mingw` generates object files under the PE/COFF format,
+supports both the `__stdcall` and `__cdecl` calling conventions, and supplies
+a runtime that allows GCC compiled code to run directly on Windows. While the
+actual format of the PE/COFF files generated by MinGW are not compatible with
+MSVC, this doesn't change that MinGW has its own runtime, even if said runtime
+is simply to reorganize symbols so that it can safely link against the MSVC
+runtime.
+
+Likewise, `cygwin` generates object files under the PE/COFF format, but targets
+a POSIX-like environment. Thus it requires a library for its generated programs
+to execute correctly.
+
+Because of this tiered system, an "umbrella" term is needed. Our toolchains do
+not exist in a vacuum, and interact with our overall *environment*, hence the
+name *environment* was chosen.
+
+
+<pre class=biblio>
+{
+  "clang-cross-compile": {
+    "href": "https://clang.llvm.org/docs/CrossCompilation.html",
+    "title": "Cross-compilation using Clang"
+  },
+  "gcc-host-target": {
+    "href": "https://gcc.gnu.org/install/specific.html",
+    "title": "Host/Target specific installation notes for GCC"
+  }
+}
+</pre>

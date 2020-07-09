@@ -9,17 +9,35 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Check Utilities
+        uses: actions/github-script@v2
+        id: ripgrep-package
+        with:
+          result-encoding: string
+          script: |
+            const mimetype = "application/vnd.debian.binary-package";
+            const { data: release } = await github.repos.getLatestRelease({
+              owner: 'BurntSushi',
+              repo: 'ripgrep'
+            });
+            const asset = release.assets.find((asset) => { asset.content_type === mimetype });
+            if (asset === undefined) {
+              core.setFailed(`Could not determine .deb package for ${release.name}`);
+            }
+            return asset.browser_download_url
+      - name: Download Utilities
+        run: curl -OL ${{ steps.ripgrep-package.outputs.result }}
+      - name: Install Utilities
+        run: sudo apt install *.deb
       - name: Setup Python
         uses: actions/setup-python@v1
         with:
-          python-version: '3.7'
+          python-version: '3.x'
       - name: Install Bikeshed
         run: |
           python -m pip install --upgrade pip
           python -m pip install --upgrade bikeshed
       - name: Update Bikeshed
         run: bikeshed update
-      - name: Install Utilities
-        run: cargo install ripgrep
       - name: Build Documents
-        run: make html
+        run: make -jobs
