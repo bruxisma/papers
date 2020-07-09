@@ -1,5 +1,4 @@
 <pre class='metadata'>
-Markup Shorthands: markdown yes
 Group: WG21
 Status: P
 Shortname: P1281
@@ -7,12 +6,9 @@ Revision: 0
 Audience: SG15
 Title: Feature Presentation
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
-URL: https://wg21.link/p1281r0
 Abstract: `if constexpr` does not work at any scope beyond that of a function.
 Abstract: Let's add an attribute and function so that we can have feature or
 Abstract: platform specific code without having to use the preprocessor.
-!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxs9E">P1281R0</a>
-!Current Source: <a href="https://git.io/fxs90">slurps-mad-rips/papers/proposals/feature-presentation.bs</a>
 </pre>
 <style>
 ins  {background-color: #CCFFCC; text-decoration: underline;}

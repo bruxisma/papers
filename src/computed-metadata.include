@@ -1,8 +1,10 @@
 {
   "Markup Shorthands": "markdown yes",
+  "No Abstract": "yes",
   "ED": "https://wg21.link/[SHORTNAME]R[LEVEL]",
   "TR": "https://wg21.link/[SHORTNAME]",
   "Indent": "2",
   "!Latest source": "<a href=[REPOSITORYURL]/blob/HEAD/[FILENAME]>[FILENAME]</a>",
-  "!This source": "<a href=[REPOSITORYURL]/blob/[GITHUB-SHA]/[FILENAME]>[FILENAME]</a>"
+  "!This source": "<a href=[REPOSITORYURL]/blob/[GITHUB-SHA]/[FILENAME]>[FILENAME]</a>",
+  "Logo": "https://isocpp.org/assets/images/cpp_logo.png"
 }

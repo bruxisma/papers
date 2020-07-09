@@ -1,5 +1,4 @@
 <pre class='metadata'>
-Markup Shorthands: markdown yes
 Group: WG21
 Status: P
 Shortname: P1305
@@ -8,7 +7,6 @@ Audience: EWG
 Title: Deprecate The Addressof Operator
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
 Date: 2018-10-07
-URL: https://wg21.link/p1305r0
 Abstract: The addressof operator (`&`) might have had its use in being
 Abstract: overloaded, however in practice countless issues have arisen from the 
 Abstract: simple possible case of "but what if someone overloaded it?". This 
@@ -17,8 +15,6 @@ Abstract: later made `constexpr`. Even if a minority of programmers do use it
 Abstract: for representing some other memory model, why should the rest of the
 Abstract: compiler vendors, C++ programmers, and library implementors have to
 Abstract: make due with a function? It should be the other way around!
-!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxGSW">P1305</a>
-!Current Source: <a href="https://git.io/fxGSB">slurps-mad-rips/papers/proposals/deprecate-addressof.bs</a>
 </pre>
 <style>
 ins  {background-color: #CCFFCC; text-decoration: underline;}

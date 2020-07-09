@@ -1,5 +1,4 @@
 <pre class='metadata'>
-Markup Shorthands: markdown yes
 Group: WG21
 Status: P
 Shortname: P1302
@@ -9,14 +8,11 @@ Title: Implicit Module Partition Lookup
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
 Editor: Richard Smith, richard@metafoo.co.uk
 Date: 2019-01-21
-URL: https://wg21.link/p1302r1
 Abstract: We seek to enforce a particular form of module partition lookup as a
 Abstract: "fast path" opportunity for building modules, with minimal impact to
 Abstract: existing code, while allowing for incremental modularization of
 Abstract: user's code bases. This is not a convention, but a requirement for
 Abstract: conformance for all vendors whose code will run on an abstract machine
-!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxG98">P1302</a>
-!Current Source: <a href="https://git.io/fxGS1">slurps-mad-rips/papers/proposals/implicit-module-partition.bs</a>
 </pre>
 <style>
 ins  {background-color: #CCFFCC; text-decoration: underline;}

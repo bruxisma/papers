@@ -41,3 +41,6 @@ $(HTMLDIR):
 
 clean:
 	@${RM} $(HTMLDIR)
+
+watch:
+	watchexec -- $(MAKE) -j

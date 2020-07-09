@@ -1,5 +1,4 @@
 <pre class='metadata'>
-Markup Shorthands: markdown yes
 Group: WG21
 Status: P
 Shortname: P1273
@@ -7,11 +6,8 @@ Revision: 0
 Audience: EWG
 Title: 86 The Absurd (From Exceptions)
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
-URL: https://wg21.link/p1273r0
 Abstract: It's time we take a stand and throw out the ability to throw pointer
 Abstract: to members and floating point values.
-!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fx3hD">P1273R0</a>
-!Current Source: <a href="https://git.io/fx3hS">slurps-mad-rips/papers/proposals/86-the-absurd.bs</a>
 </pre>
 <style>
 ins  {background-color: #CCFFCC; text-decoration: underline;}

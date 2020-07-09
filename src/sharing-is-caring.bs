@@ -1,5 +1,4 @@
 <pre class='metadata'>
-Markup Shorthands: markdown yes
 Group: WG21
 Status: P
 Shortname: P1283
@@ -7,13 +6,10 @@ Revision: 0
 Audience: EWG
 Title: Sharing is Caring
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
-URL: https://wg21.link/p1283r0
 Date: 2018-10-06
 Abstract: We need a shared attribute for C++ because some vendors refuse
 Abstract: to add their compiler specific attribute syntax into a generalized
 Abstract: attribute namespace.
-!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsO7">P1283R0</a>
-!Current Source: <a href="https://git.io/fxsOS">slurps-mad-rips/papers/proposals/sharing-is-caring.bs</a>
 </pre>
 <style>
 ins  {background-color: #CCFFCC; text-decoration: underline;}

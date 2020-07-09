@@ -7,14 +7,11 @@ Audience: LWG
 Audience: SG1
 Status: P
 Group: WG21
-URL: https://wg21.link/p0468r2
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
 Date: 2020-06-24
 Markup Shorthands: markdown yes
 Abstract: A smart pointer is needed to manage objects with internal reference
 Abstract: counts to reduce maintenance overhead of C and C++ APIs.
-!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsVI">P0468</a>
-!Current Source: <a href="https://github.com/slurps-mad-rips/papers/proposals/retain-ptr">slurps-mad-rips/papers/proposals/retain-ptr</a>
 </pre>
 <style>
 ins  {background-color: #CCFFCC; text-decoration: underline;}

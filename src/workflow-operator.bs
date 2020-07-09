@@ -9,12 +9,9 @@ Audience: EWG
 Title: Ceci N'est Pas Une Pipe: Adding a workflow operator to C++ 
 Editor: Isabella Muerte, Target, isabella.muerte@target.com
 Date: 2018-09-27
-URL: https://wg21.link/p1282r0
 Abstract: Adding a workflow operator to C++ gives us the opportunity to solve
 Abstract: operator precedence for continuations on ranges, executors, monads,
 Abstract: coroutines, and anything else users might want.
-!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsWc">P1282R0</a>
-!Current Source: <a href="https://git.io/fxsWC">slurps-mad-rips/papers/proposals/workflow-operator.bs</a>
 </pre>
 <style>
 ins  {background-color: #CCFFCC; text-decoration: underline;}

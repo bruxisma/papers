@@ -7,13 +7,10 @@ Revision: 0
 Audience: EWG
 Title: Void Main
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
-URL: https://wg21.link/p1276r0
 Date: 2018-09-15
 Abstract: The current entrypoint for C++ is bizarre, special cased, and
 Abstract: violates our own best practices. Let's make void a valid return type
 Abstract: for main.
-!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsmz">P1276R0</a>
-!Current Source: <a href="https://git.io/fxsmu">slurps-mad-rips/papers/proposals/void-main.bs</a>
 </pre>
 <style>
 ins  {background-color: #CCFFCC; text-decoration: underline;}

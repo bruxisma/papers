@@ -1,6 +1,4 @@
 <pre class='metadata'>
-Markup Shorthands: markdown yes
-No Abstract: yes
 Group: WG21
 Status: P
 Shortname: P1864
@@ -9,9 +7,7 @@ Audience: SG15
 Title: Defining Target Tuplets
 Editor: Isabella Muerte, imuerte@hey.com
 Date: 2020-07-08
-Local Boilerplate: computed-metadata yes
 </pre>
-<script type="text/javascript" src="http://livejs.com/live.js"></script>
 
 # Revision History # {#changelog}
 

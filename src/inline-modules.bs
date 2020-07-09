@@ -1,5 +1,4 @@
 <pre class='metadata'>
-Markup Shorthands: markdown yes
 Group: WG21
 Status: P
 Shortname: P1303
@@ -8,10 +7,6 @@ Date: 2018-10-07
 Audience: EWG
 Title: Inline Module Partitions
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
-URL: https://wg21.link/p1303
-Abstract:
-!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxG9H">P1303</a>
-!Current Source: <a href="https://git.io/fxG9M">slurps-mad-rips/papers/proposals/inline-modules.bs</a>
 </pre>
 <style>
 ins  {background-color: #CCFFCC; text-decoration: underline;}

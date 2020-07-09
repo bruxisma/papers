@@ -1,5 +1,4 @@
 <pre class="metadata">
-Markup Shorthands: markdown yes
 Group: WG21
 Status: P
 Shortname: P1275
@@ -7,12 +6,9 @@ Revision: 0
 Audience: LEWG, SG15, SG16
 Title: Desert Sessions: Improving hostile environment interactions
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
-URL: https://wg21.link/p1275r0
 Date: 2018-10-06
 Abstract: Working with environment variables and command line arguments is
 Abstract: painful, platform specific, and lacking a modern C++ touch.
-!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsCx">P1275R0</a>
-!Current Source: <a href="https://git.io/fxsWe">slurps-mad-rips/papers/proposals/desert-sessions.bs</a>
 !Implementation: <a href="https://git.io/fxGTH">slurps-mad-rips/sessions</a>
 </pre>
 <style>

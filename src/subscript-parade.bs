@@ -7,12 +7,9 @@ Revision: 0
 Audience: EWG
 Title: Subscripts On Parade
 Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
-URL: https://wg21.link/p1277r0
 Abstract: Subscripting into a type that models a multidimensional array should
 Abstract: be viable and possible without having to implement proxy types or
 Abstract: using the call operator as an overload.
-!Current Render: <a href="https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxs9G">P1277R0</a>
-!Current Source: <a href="https://git.io/fxs9c">slurps-mad-rips/papers/proposals/subscript-parade.bs</a>
 </pre>
 <style>
 ins  {background-color: #CCFFCC; text-decoration: underline;}

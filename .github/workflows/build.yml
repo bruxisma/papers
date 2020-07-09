@@ -29,6 +29,8 @@ jobs:
         run: curl -OL ${{ steps.ripgrep-package.outputs.result }}
       - name: Install Utilities
         run: sudo apt install ./*.deb
+      - name: Setup Node
+        uses: actions/setup-node@v2
       - name: Setup Python
         uses: actions/setup-python@v1
         with:
