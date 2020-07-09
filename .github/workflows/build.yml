@@ -30,7 +30,7 @@ jobs:
       - name: Install Utilities
         run: sudo apt install ./*.deb
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v2-beta
       - name: Setup Python
         uses: actions/setup-python@v1
         with:
