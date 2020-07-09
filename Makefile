@@ -1,15 +1,15 @@
 MAKEFLAGS += --no-builtin-rules
 BIKESHED ?= bikeshed
 HTMLDIR ?= build
+ORIGIN ?= origin
 BIKESHED_PAGES =
 
 .DEFAULT_GOAL ::= all
 .PHONY: all clean
 
-EXTRACT = rg --no-line-number --with-filename 'Shortname: ([PD].*)$$' --replace '$$1'
 RM = $(if $(OS),rd /S /Q,rm -r)
-
-GITHUB_REPOSITORY ?= slurps-mad-rips/papers
+EXTRACT = rg --no-line-number --with-filename "Shortname: ([PD].*)$$" --replace "$$1"
+GITHUB_REPOSITORY ?= $(shell git remote get-url origin --push | rg --no-line-number "^.*github.com[:/](.+).git" --replace "$$1")
 GITHUB_SHA ?= HEAD
 
 BIKESHEDFLAGS += --md-local-boilerplate="computed-metadata yes"
@@ -21,7 +21,7 @@ BOILERPLATE := $(wildcard src/*.include)
 define bikeshed-target =
 $$(HTMLDIR)/$(lastword $(1)).html: BIKESHEDFLAGS += --md-text-macro="FILENAME $$<"
 $$(HTMLDIR)/$(lastword $(1)).html: $(firstword $(1)) | $$(HTMLDIR) $$(BOILERPLATE)
-	$$(BIKESHED) spec --gh-token "$$(GITHUB_TOKEN)" $$< $$@ $$(BIKESHEDFLAGS)
+	@$$(BIKESHED) spec --gh-token "$$(GITHUB_TOKEN)" $$< $$@ $$(BIKESHEDFLAGS)
 	$$(info [BIKE]: $$(basename $$(@F)) -- $$(<F))
 BIKESHED_PAGES += $$(HTMLDIR)/$(lastword $(1)).html
 endef

@@ -1,17 +1,27 @@
 # Overview
 
-This repository contains all papers and proposals for WG21 that cannot have
-a proof of concept implementation, either because of the simplicity, subject
-matter, or in some cases, due to their being opinion pieces. In some cases,
-proof of concepts may be moved to their own repository, while keeping the
-proposal *here*. This would greatly reduce the need for one to search for
-my various proposals.
+This repository contains all papers and proposals for WG21 (The C++ Standards
+Committee). The state of the repository has fallen by the wayside over the past
+few years, so some links or files may be out of date or incorrect. Work is
+being done to bring the state of everything up to date.
 
-# Layout
+Papers are currently written in the [bikeshed] format, and are stored under the
+`src/` directory. A Makefile is provided. Currently only [ripgrep] is required
+as a dependency for building. Papers are currently automatically built via a
+GitHub Action workflow.
 
-Papers are currently written in the [bikeshed] format. Drafts are located in
-the drafts directory and do not have a number. Once assigned a number, they are
-moved to the proposals directory, where they keep their current name.
+# 🚧 TODO 🚧
+
+🚧: Eventually, all papers (and their various revisions) will be deployed
+to a [Netlify] site.
+
+🚧 The current 'list' of proposals below is abysmal, and it will be revamped or
+redesigned at some point in the near future to better work with the automation
+steps used. Until that time, however, it will exist in its current state, but
+will not be kept up to date.
+
+🚧 It is currently painful to bring the github actions VM up to speed. A
+docker/shell form might be used in the meantime.
 
 # Current Proposals
 
@@ -35,26 +45,25 @@ moved to the proposals directory, where they keep their current name.
 | [P1304] |           Simplify Extern Template          |           C++23           |        Not Yet Presented (Bad Wording)        |
 | [P1305] |       Deprecate the Addressof Operator      |           C++20           |                    Rejected                   |
 
-# Current Drafts Or Planned Papers
- * Target Tuplets
-
 [bikeshed]: https://github.com/tabatkins/bikeshed
-[P0468]: https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsVI
-[P1272]: https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fAvW7
-[P1273]: https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fx3hD
-[P1274]: https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsv8
-[P1275]: https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsCx
-[P1276]: https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsmz
-[P1277]: https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxs9G
-[P1278]: https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsLQ
-[P1279]: https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsZ6
-[P1280]: https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fx3gF
-[P1281]: https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxs9E 
-[P1282]: https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsWc
-[P1283]: https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxsO7
-[P1302]: https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxG98
-[P1303]: https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxG9H
-[P1304]: https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxGHv
-[P1305]: https://api.csswg.org/bikeshed/?force=1&url=https://git.io/fxGSW
+[ripgrep]: https://github.com/burntsushi/ripgrep
+[Netlify]: https://netlify.com
+[P0468]: #
+[P1272]: #
+[P1273]: #
+[P1274]: #
+[P1275]: #
+[P1276]: #
+[P1277]: #
+[P1278]: #
+[P1279]: #
+[P1280]: #
+[P1281]: #
+[P1282]: #
+[P1283]: #
+[P1302]: #
+[P1303]: #
+[P1304]: #
+[P1305]: #
 
 [P2128]: https://wg21.link/P2128
