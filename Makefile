@@ -8,7 +8,7 @@ BIKESHED_PAGES =
 .PHONY: all clean
 
 RM = $(if $(OS),rd /S /Q,rm -r)
-EXTRACT = rg --no-line-number --with-filename "Shortname: ([PD].*)$$" --replace "$$1"
+EXTRACT = rg --no-line-number --with-filename 'Shortname: ([PD].*)$$' --replace '$$1'
 GITHUB_REPOSITORY ?= $(shell git remote get-url origin --push | rg --no-line-number "^.*github.com[:/](.+).git" --replace "$$1")
 GITHUB_SHA ?= HEAD
 
@@ -32,7 +32,6 @@ proposals = $(wildcard src/*.bs)
 targets = $(foreach filename,${proposals},$(call extract-name,${filename}))
 
 $(foreach target,$(targets),$(eval $(call bikeshed-target,$(subst :, ,$(target)))))
-$(foreach target,$(targets),$(info $(call bikeshed-target,$(subst :, ,$(target)))))
 
 all: $(BIKESHED_PAGES)
 $(BIKESHED_PAGES): $(HTMLDIR)
