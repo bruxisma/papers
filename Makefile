@@ -13,14 +13,15 @@ GITHUB_REPOSITORY ?= $(shell git remote get-url origin --push | rg --no-line-num
 GITHUB_SHA ?= HEAD
 
 BIKESHEDFLAGS += --md-local-boilerplate="computed-metadata yes"
-BIKESHEDFLAGS += --md-text-macro="GITHUB-REPOSITORY $(GITHUB_REPOSITORY)"
+BIKESHEDFLAGS += --md-repository=$(GITHUB_REPOSITORY)
+
 BIKESHEDFLAGS += --md-text-macro="GITHUB-SHA $(GITHUB_SHA)"
 
 BOILERPLATE := $(wildcard src/*.include)
 
 define bikeshed-target =
 $$(HTMLDIR)/$(lastword $(1)).html: BIKESHEDFLAGS += --md-text-macro="FILENAME $$<"
-$$(HTMLDIR)/$(lastword $(1)).html: $(firstword $(1)) | $$(HTMLDIR) $$(BOILERPLATE)
+$$(HTMLDIR)/$(lastword $(1)).html: $(firstword $(1)) $(BOILERPLATE) | $$(HTMLDIR)
 	@$$(BIKESHED) spec --gh-token "$$(GITHUB_TOKEN)" $$< $$@ $$(BIKESHEDFLAGS)
 	$$(info [BIKE]: $$(basename $$(@F)) -- $$(<F))
 BIKESHED_PAGES += $$(HTMLDIR)/$(lastword $(1)).html

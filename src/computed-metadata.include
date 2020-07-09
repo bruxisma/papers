@@ -2,6 +2,7 @@
   "Markup Shorthands": "markdown yes",
   "ED": "https://wg21.link/[SHORTNAME]R[LEVEL]",
   "TR": "https://wg21.link/[SHORTNAME]",
-  "!Latest source": "<a href=https://github.com/[GITHUB-REPOSITORY]/blob/HEAD/[FILENAME]>[FILENAME]</a>",
-  "!This source": "<a href=https://github.com/[GITHUB-REPOSITORY]/blob/[GITHUB-SHA]/[FILENAME]>[FILENAME]</a>"
+  "Indent": "2",
+  "!Latest source": "<a href=[REPOSITORYURL]/blob/HEAD/[FILENAME]>[FILENAME]</a>",
+  "!This source": "<a href=[REPOSITORYURL]/blob/[GITHUB-SHA]/[FILENAME]>[FILENAME]</a>"
 }
