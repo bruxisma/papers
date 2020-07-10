@@ -34,8 +34,8 @@ changes in existing practices, while a Standing Document can be updated at each
 plenary vote, or simply be updated by an editor, and published at will.
 
 This paper might give examples of existing target tuplets, but this is for
-demonstration purposes and not to be taken as a guarantee that the tuplet will
-exist in such a form in the future.
+demonstration purposes and is not to be taken as a guarantee that the tuplet
+will exist in such a form in the future.
 
 Lastly, this paper also does not attempt to define a *sysroot*. That may or may
 not be defined by a future separate paper.
@@ -82,71 +82,157 @@ convert any unrecognized entries as `unknown`, and then infer specifics.
 
 ## Terms and Definitions ## {#terms-and-definitions}
 
-<sup>1</sup>
+For the purposes of this document, the following terms apply
 
-: rectify
-:: words
+: *build system*
+:: A program that will drive the execution of a C++ compiler on a set of
+   translation units. They live a level above the compiler, and thus are
+   technically out of scope for the C++ standard document itself.
 
-<blockquote>
-<sup>1</sup>A *target* is the architecture, environment, and operating system (or
-lack thereof) a compiler is generating code for.
+: *platform*
+:: The inverse of the C++ abstract machine. That is, a concrete set of
+   compilers, tools, programs, and code necessary to execute a program.
+   Colloquially referred to as a system in some spaces.
 
-<sup>2</sup>A *target tuplet entry* or *entry* is defined as a UTF-8 sequence,
-also known colloquially as a word.
+: *vendor*
+:: An entity that provides an implementation of a C++ toolchain.
 
-<sup>3</sup>A *target tuplet* is defined as a four entries, delimited via
-a hyphen-minus (&#45;).
+: *host*
+:: A specific instance of a platform, upon which the C++ compiler executes.
+   [*Note*: The C++ standard does not mandate that a C++ compiler must be a
+   well-formed program itself --
+   *end note*]
 
-<sup>4</sup>A *supplied target tuplet* is a sequence of entries,
-delimited via a hyphen-minus (&#45;), with a minimum of one entry, and a
-maximum of four entries.
+: *target*
+:: A specific instance of a platform, upon which a well-formed program is
+   planned to execute
 
-<sup>5</sup>An *environment* is a combination of any set of loadable program
-format (e.g., COFF, MACH-O, ELF, PTX), ABI (`gnu`, `gnueabi`), or runtime
-(`msvc`, `cygwin`). A runtime is a superset of an ABI. An ABI is a superset of
-a loadable program format.
+: *machine*
+:: A specific instance of a target, upon which a well-formed program can run.
 
-<sup>6</sup>When a *supplied target tuplet* is provided to a compiler, or build
-system, the missing entries are to be filled in with the catch-all element
-`unknown`.
+: *object file format*
+:: The detailed file format a translation unit is in prior to linking.
 
-<sup>7</sup>When a compiler is given a *target tuplet* that it is unable to 
-rectify or target, the compiler will treat the invocation as ill-formed, no
-diagnostic required.
+: *executable file format*
+:: The detailed file format a program is in once linked.
 
-<sup>8</sup>When a build system is given a *target tuplet* that it is unable to
-rectify or target, the build system is to alert the user at the earliest
-possible time that the compiler cannot be safely invoked in such a manner.
+## Target Tuplet ## {#target-tuplet}
 
-<sup>9</sup>The first entry in a *target tuplet* is to specify the
-*architecture* that the compiler will be targeting. Details about which
-specific processor under this architecture are *not* to be defined.
-**Revisions** of the architecture are permitted to be attached (e.g., `arm`,
-`armv6`, `armv7a`), but only if the architecture is defined as having
-revisions.
+### In general ### {#general}
 
-<sup>10</sup>The second entry in a *target tuplet* is to specify the *vendor*
-that has provided the given toolchain. This field is optional, as open source
-compilers can have a theoretically infinite number of vendors, one per each
-person compiling it. A *target tuplet* may indicate the lack of a vendor by
-using the specifier *none*. It is highly recommended that compiler vendors have
-a specific name for this field, to differentiate between similar compilers
-provided by different vendors.
+<sup>1</sup> Target tuplets are a series of components used to represent a human
+friendly phrase for a compiler target. They are useful for discussing minimum
+feature sets for a code base, as well as what platform a program is expected to
+compile and execute on.To be able to create a well-formed program for a given
+target, a build system must know the details of how to invoke a compiler,
+invoke a linker, and produce a final program or collection of object files.
 
-<sup>11</sup>The third entry in a *target tuplet* is to specify the *operating
-system* that is being targeted. In the event that the target is devoid of an
-operating system, the bare metal specifier *none* is to be used.
+<sup>2</sup> Since build systems live outside of the standard, they must be able
+to invoke one or more compilers, regardless of whether they are from the same
+vendor. This document defines 4 parts that make up a target tuplet.
 
-<sup>12</sup>The fourth entry in a *target tuplet* is to specify the
-*environment* being targeted. This can include ELF, Mach-O, COFF, GNU, and
-others. The specifics of the environment being targeted do not matter, simply
-that there is an environment for the compiler to target
+<sup>3</sup> The 4 parts that make up a target tuplet are
+: 
+:: <sup>(3.1)</sup> &mdash; architecture
+:: <sup>(3.2)</sup> &mdash; vendor
+:: <sup>(3.2)</sup> &mdash; operating system
+:: <sup>(3.2)</sup> &mdash; environment
 
-<sup>13</sup>A catch-all entry named `unknown` may be used in a *supplied
-target tuplet* to allow toolchain specific information to be inferred by the
-build system.
+respectively. The generic term *component* refers to any portion of a target
+tuplet that meets the above criteria.
 
-</blockquote>
+<sup>4</sup> Target tuplets are constructed by concatenating the content of
+all components with the hypen-minus character (&#45;). Components are not
+permitted to contain the hyphen-minus themselves.
+
+<sup>5</sup> A target tuplet is considered well-formed if a compiler is able to
+understand the 4 components provided. Likewise, if a compiler is unable to
+understand the 4 components provided, the tuplet is considered ill-formed.
+While a build system is free to resolve the validity of a target tuplet, only a
+compiler can verify whether or not it is well formed.
+
+<sup>6</sup> In addition to the requirements above, a compiler or build system
+is free to take fewer than the 4 components required of a target tuplet. Such a
+sequence is called a *supplied target tuplet*. Each missing component in a
+supplied target tuplet can be replaced with the catch-all name `unknown`,
+however at least one component must be supplied by name.
+[*Note:* In most cases, the `vendor` component will be ignored or missing --
+*end note*]
+
+## Component Descriptions ## {#component-descriptions}
+
+### Architecture ### {#component-architecture}
+
+<sup>1</sup> The architecture refers to the instruction set used for a given
+processor.
+
+<sup>2</sup> The architecture may not refer to specific releases of names of a
+given processor.
+
+<sup>3</sup> The architecture is permitted to express revisions to the
+instruction set itself.
+
+<sup>4</sup> [*Note:* `arm`, `armv6`, and `armv7a` are from the same family of
+processors, however the `v6` and `v7` refer to revisions made to the ISA --
+*end note*]
+
+### Vendor ### {#component-vendor}
+
+<sup>1</sup> A vendor is any entity that provides a C++ toolchain to a user.
+Whether this is an organization, a simple person, a PC, or even no one.
+<sup>2</sup> In the event that no one is marked as the vendor, the component
+will always resolve to the value `none`.
+
+### Operating System ### {#component-operating-system}
+
+<sup>1</sup> An *operating system* is a superset of an environment, but is
+not responsible of how a user interacts with their toolchain.
+
+### Environment ### {#component-environment}
+
+<sup>1</sup> An *environment* is any one of an executable file format, an
+<abbr="Application Binary Interface">ABI</abbr> or a runtime.
+
+<sup>2</sup> Due to the nature of how an environment can be expressed, each
+type of environment can supercede another, with the exception of an executable
+file format.
+
+:
+:: <sup>(2.1)</sup> An executable file format implies that there is only 1 way
+   to load and execute the program without virtualizing or converting to another
+   environment.
+:: <sup>(2.2)</sup> An ABI implies the existence of an executable file format,
+   an object file format, and 1 or more calling conventions for symbols within
+   the object file format
+:: <sup>(2.3)</sup> A runtime is an object file format, an ABI for object
+   files, and 1 or more libraries needed for a an executable to be produced
+
+### Resolution ### {#component-resolution}
+
+<sup>1</sup> Resolving a supplied target tuplet into a well-formed target
+tuplet is not an intuitive process based on the written form.
+
+<figure>
+<pre class=include-raw>
+path: written-target-tuplet.svg
+</pre>
+<figcaption>Written Component Order</figcaption>
+</figure>
+
+<sup>2</sup> While the written component order is currently `architecture`,
+`vendor`, `operating system`, and `environment`, the actual priority differs
+based on the importance of each component.
+
+<figure>
+<pre class=include-raw>
+path: priority-target-tuplet.svg
+</pre>
+<figcaption>Component Priority Order</figcaption>
+</figure>
+
+<sup>3</sup> In the event that no operating system was provided, the component
+will be set to the *bare metal specifier* `none` and the resolution steps are
+to start again.
 
 # Informative Explanation # {#explanation}
 
