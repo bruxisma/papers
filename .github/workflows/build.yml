@@ -64,7 +64,8 @@ jobs:
       - name: Build Documents
         run: make --jobs
       - name: Deploy Preview
+        if: env.GITHUB_ACTOR == "slurps-mad-rips"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        run: netlify deploy --json --alias=$GITHUB_SHA --dir=build
+        run: netlify deploy --json --alias=$GITHUB_SHA --dir=build --prod
