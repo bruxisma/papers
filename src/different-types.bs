@@ -1,7 +1,7 @@
 <pre class="metadata">
-Shortname: D2199
+Shortname: P2199
 Revision: 0
-Status: D
+Status: P
 Group: WG21
 Audience: LEWG
 Title: Concepts to Differentiate Types
