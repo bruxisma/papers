@@ -16,6 +16,7 @@ BIKESHEDFLAGS += --md-local-boilerplate="computed-metadata yes"
 BIKESHEDFLAGS += --md-repository=$(GITHUB_REPOSITORY)
 
 BIKESHEDFLAGS += --md-text-macro="GITHUB-SHA $(GITHUB_SHA)"
+BIKESHEDFLAGS += --md-text-macro="TAB &emsp;&emsp;"
 
 BOILERPLATE := $(wildcard src/*.include)
 

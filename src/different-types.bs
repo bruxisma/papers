@@ -1,0 +1,312 @@
+<pre class="metadata">
+Shortname: D2199
+Revision: 0
+Status: D
+Group: WG21
+Audience: LEWG
+Title: Concepts to Differentiate Types
+Editor: Isabella Muerte, imuerte@hey.com
+No Abstract: no
+Toggle Diffs: yes
+Abstract: The differentiation of types is a commonly used constraint in C++.
+Abstract: Typically, wording is copy pasted regarding this behavior, or shown
+Abstract: only in exposition only helpers. Adding explicit definitions would
+Abstract: reduce the need for multiple users to implement the same types.
+</pre>
+<style>
+ins > * {background-color: #CCFFCC; text-decoration: underline;}
+del > * {background-color: #FFCACA; text-decoration: line-through;}
+tr.insert { background-color: #CCFFCC; text-decoration: underline; }
+ins > clause {
+  justify-content: space-between;
+  display: flex;
+}
+</style>
+
+# Revision History # {#changelog}
+
+## Revision 0 ## {#r0}
+
+    Initial Release. 🥳
+
+# Motivation # {#motivation}
+
+Within the standard library, there are multiple instances of phrases such as
+"If *T* is the same type as *U*, the program is ill-formed", or *This function
+does not participate in overload resolution unless the following contrainsts
+are true*, followed by something like `is_same_v<remove_cvref_t<U>, type>`. It
+would, honestly, be easier to express these with concepts. Furthermore, the
+inversion of the `std::same_as` concept is much more common than `std::same_as`
+itself when trying to constrain signatures of template types. Additionally, in
+the realm of ranges, users tend to need to express that *similar* types are ok
+in some instances, while *distinct* (or *different*, see [[#feedback]] regarding
+this phrase) are fairly common. In the author's work codebase, the inversion of
+`std::same_as` appears about 20 times for each time where `std::same_as` is
+used. While it is still early days regarding concepts, it would not be
+surprising if other code bases had similar ratios, though most likely they are
+not as extreme.
+
+In the interest of symmetry with `same_as` and `different_from`, this paper
+provides both `similar_to` and `distinct_from`, although the wording found
+below only redefines wording in terms of `different_from`, and `distinct_from`.
+
+# Request for Feedback # {#feedback}
+
+Currently, there is some ambiguity with the naming of `different_from` and
+`distinct_from`. When something is *distinct*, it typically implies that it is
+set apart and completely dissimilar to something else. However, the direct
+antonym of *same* in english is *different*. The author is fine with swapping
+the definition of `different_from` and `distinct_from`, but will defer to
+any consensus from LEWG or LWG if it is deemed necessary to swap their
+definitions.
+
+# Wording # {#wording}
+
+The following wording is based off of the text found at <a
+href=https://eel.is/c++draft>https://eel.is/c++draft</a> as of 2020-07-11.
+
+The following is to be modified (according to a value as decided by LWG) in
+17.3.2 <em>Header `<version>` synopsis</em>
+**[version.syn]**, statement 2
+
+<blockquote>
+`#define __cpp_lib_concepts`
+<del>`202002L`</del><ins>20&#65533;&#65533;&#65533;&#65533;L</ins>
+</blockquote>
+
+The following is to be added to 18.3 <em>Header `<concepts>` synopsis</em>
+**[concepts.syn]**
+
+<blockquote>
+<ins>
+<em>// [concept.different], concept different_from</em><br>
+`template <class T, class U>`<br>
+&emsp;`concept different_from = `&ensp;<em>see below</em>`;`<br><br>
+<em>// [concept.similar], concept similar_to</em><br>
+`template <class T, class U>`<br>
+&emsp;`concept similar_to = `&ensp;<em>see below</em>`;`<br><br>
+<em>// [concept.distinct], concept distinct_from</em><br>
+`template <class T, class U>`<br>
+&emsp;`concept distinct_from = `&ensp;<em>see below</em>`;`<br>
+</ins>
+</blockquote>
+
+The following is to be added to 18.4 *Language-related concepts*
+[**concepts.lang**]
+
+<blockquote>
+<ins>
+<clause>18.4.&#65533; Concept `different_from` **[concept.different]**</clause>
+`template <class T, class U>`<br>
+&emsp;`concept different_from = not same_as<T, U>;`
+<br>
+<clause>18.4.&#65533; Concept `similar` **[concept.similar]**</clause>
+`template <class T, class U>`<br>
+&emsp; `concept similar_to = same_as<remove_cvref_t<T>, remove_cvref_t<U>>;`
+<br>
+<clause>18.4.&#65533; Concept `distinct_from` **[concept.distinct]**</clause>
+`template <class T, class U>`<br>
+&emsp;`concept distinct_from = not similar_to<T, U>;`
+</ins>
+</blockquote>
+
+The following is to be modified in 20.6.3.1 *Constructors* **[optional.ctor]**,
+statement 22
+
+<blockquote>
+*Constraints*: `is_constructible_­v<T, U>` is `true`,
+<del>`is_same_v<remove_­cvref_t<U>`, `in_place_­t>`</del><ins>`distinct_from<U,
+in_place_t>`</ins>is <del>`false`</del><ins>`true`</ins>, and <del>
+`is_same_v<remove_­cvref_t<U>, optional>`</del><ins>`distinct_from<U,
+optional>`</ins> is <del>`false`</del>.<ins>`true`</ins>
+</blockquote>
+
+The following is to be modified in 20.6.3.3 *Assignment* **[optional.assign]**,
+statement 14
+
+<blockquote>
+*Constraints*: <del>`is_same_v<remove_cvref_t<U>, optional>`</del><ins>
+`distinct_from<U, optional>`</ins>is<del>`false`</del><ins>`true`</ins>
+</blockquote>
+
+The following is to be modified in 20.7.3.3 *Assignment* **[variant.assign]**,
+statement 12.1
+
+<blockquote>
+&mdash; <del>`is_same_v<remove_cvref_t<T>,
+variant>`</del><ins>`distinct_from<T, variant>`</ins> is
+<del>`false`</del><ins>`true`</ins>.
+</blockquote>
+
+The following is to be modified in 20.8.3.1 *Construction and destruction*
+**[any.cons]**, statement 6
+
+<blockquote>
+*Constraints*: <del>`VT` is not the same type as
+`any`</del><ins>`distinct_from<T, any>` is `true`</ins>
+</blockquote>
+
+The following is to be modified in 20.14.5.1 *Constructors and destructor*
+**[refwrap.const]**, statement 2
+
+<blockquote>
+*Constraints*: The expression *FUN*`(declval<U>())` is well-formed and
+<del>`is_same_v<remove_cvref_t<U>,
+reference_wrapper>`</del><ins>`distinct_from<U, reference_wrapper>`</ins> is
+<del>`false`</del><ins>`true`</ins>
+</blockquote>
+
+The following is to be modified from 21.2 *Character traits* **[char.traits]**,
+statement 3
+
+<blockquote>
+To specialize those templates to generate a string, string view, or iostream
+class to handle a particular character container type
+([defns.character.container]) `C`, that and its related character traits class
+`X` are passed as a pair of parameters to the string, string view, or iostream
+template as parameters `charT` and `traits`. <del>If `X::char_type` is not the
+same type as `C`, the program is ill-formed.</del><ins>If
+`different_from<X::char_type, C>` is `true`, the program is ill-formed</ins>
+</blockquote>
+
+The following is to be modified from 21.3.2.1 *General requirements*
+**[string.require]**, statement 3
+
+<blockquote>
+In every specialization `basic_string<charT, traits, Allocator>`, the type
+`allocator_traits<Allocator>::value_type` shall name the same type as `charT`.
+Every object of type `basic_string<charT, traits, Allocator>` uses an object of
+type `Allocator` to allocate and free storage for the contained `charT` objects
+as needed. The `Allocator` object used is obtained as described in
+[container.requirements.general]. In every specialization `basic_string<charT,
+traits, Allocator>`, the type `traits` shall mee the character traits
+requirements ([char.traits]). [*Note:* The program is ill-formed if <del>
+`traits::char_type` is not the same type as `charT`</del><ins>
+`different_from<traits::char_type, charT>` is `true`</ins> --
+*end note*]
+</blockquote>
+
+The following is to be modified from 21.4.2 <em>Class template
+`basic_string_view`</em> **[string.view.template]**, statement 1
+
+<blockquote> In every specialization `basic_string_view<charT, traits>`, the
+type `traits` shall mee the character traits requirements ([char.traits]).
+[*Note:* The program is ill-formed if <del> `traits::char_type` is not the same
+type as `charT`</del><ins> `different_from<traits::char_type, charT>` is
+`true`</ins> --
+*end note*]
+</blockquote>
+
+The following is to be removed from 24.5.1 *Helper concepts*
+[**range.utility.helpers**]
+
+<blockquote>
+<del>
+`template<class T, class U>`<br>
+[TAB]`concept not-same-as =                         // exposition only`<br>
+[TAB] &emsp;`!same_as<remove_cvref_t<T>, remove_cvref_t<U>>;`
+</del>
+</blockquote>
+
+The following is to be modified in 24.5.3 *Sub-ranges* [**range.subrange**]
+
+<blockquote>
+`template<class From, class To>`<br>
+[TAB] `concept convertible-to-non-slicing =                    // exposition only`<br>
+[TAB] [TAB] `convertible_to<From, To> &&`<br>
+[TAB] [TAB] `!(is_pointer_v<decay_t<From>> &&`<br>
+[TAB] [TAB] &ensp;`is_pointer_v<decay_t<To>> &&`<br>
+<del>[TAB] [TAB] &ensp;`not-same-as<remove_pointer_t<decay_t<From>>,
+remove_pointer_t<decay_t<To>>>);`</del><br> <ins>[TAB]
+[TAB]&ensp;`distinct_from<remove_pointer_t<decay_t<From>>,
+remove_pointer_t<decay_t<To>>>);`</ins>
+</blockquote>
+
+The following is to be modified in 24.5.3.1 *Constructors and conversions*
+[**range.subrange.ctor**]
+
+<blockquote>
+<del>`template<not-same-as<subrange> R>`</del><br>
+<ins>`template<distinct_from<subrange> R>`</ins><br>
+[TAB] `requires borrowed_range<R> &&`<br>
+[TAB] [TAB] `convertible-to-non-slicing<iterator_t<R>, I> &&`<br>
+[TAB] [TAB] `convertible_­to<sentinel_t<R>, S>`<br>
+`constexpr subrange(R&& r) requires (!StoreSize || sized_­range<R>);`
+</blockquote>
+
+<blockquote>
+<del>`template<not-same-as<subrange> PairLike>`</del><br>
+<ins>`template<distinct_from<subrange> PairLike>`</ins><br>
+[TAB] `requires pair-like-convertible-from<PairLike, const I&, const S&>`<br>
+`constexpr operator PairLike() const;`
+</blockquote>
+
+The following is to be modified in 24.7.3.1 *Class template ref_view*
+[**range.ref.view**]
+
+Inside of statement 1
+<blockquote>
+<del>`template<not-same-as<ref_view> T>`</del><br>
+<ins>`template<distinct_from<ref_view> T>`</ins><br>
+[TAB] `requires /* see below */`<br>
+`constexpr ref_view(T&& t);`
+</blockquote>
+
+At the definition preceeding statement 2
+<blockquote>
+<del>`template<not-same-as<ref_view> T>`</del><br>
+<ins>`template<distinct_from<ref_view> T>`</ins><br>
+[TAB] `requires /* see below */`<br>
+`constexpr ref_view(T&& t);`
+</blockquote>
+
+The following is to be modified in 29.3.2 *Overview*
+**[iostream.forward.overview]**, statement 6
+
+<blockquote>
+[*Note:* For each of the class tempaltes above, the program is ill-formed if
+<del>`traits::char_type` is not the same type as
+`charT`</del><ins>`different_from<traits::char_type, charT>` is `true`</ins>
+([char.traits]) --
+*end note*]
+</blockquote>
+
+The following is to be modified in 32.4.2.2 *Constructors*
+**[thread.thread.constr]**, statement 3
+
+<blockquote>
+*Constraints*: <del>`remove_cvref_t<F>` is not the same type as
+`thread`</del><ins>`distinct_from<F, thread>` is `true`</ins>
+</blockquote>
+
+The following is to be modified in 32.4.3.1 *Constructors, move, and
+assignment*, statement 3
+
+<blockquote>
+*Constraints*: <del>`remove_cvref_t<F>` is not the same type as
+`jthread`</del><ins>`distinct_from<F, jthread>` is `true`</ins>
+</blockquote>
+
+The following is to be modified in 32.9.10.1 *Member functions*
+**[futures.task.members]**, statement 2
+
+<blockquote>
+*Constraints*: <del>`remove_cvref_t<F>` is not the same type as
+`packaged_task<R(ArgTypes...)>`</del><ins>`distinct_from<F, packaged_task>` is
+`true`</ins>
+</blockquote>
+
+The following is to be removed from the *Index of library concepts*
+
+<p>
+<del><em>not-same-as</em><strong>[range.utility.helpers]</strong></del>
+</p>
+
+The following is to be added to the *Index of library concepts*
+
+<p>
+<ins><code>different_from</code><strong>[concept.different]</strong></ins>,
+<ins><code>similar_to</code><strong>[concept.similar]</strong></ins>,
+<ins><code>distinct_from</code><strong>[concept.distinct]</strong></ins>
+</p>
+
