@@ -10,6 +10,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Download Utilities
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: >
           gh release download
           --repo burntsushi/ripgrep
