@@ -9,24 +9,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Check Utilities
-        uses: actions/github-script@v2
-        id: ripgrep-package
-        with:
-          result-encoding: string
-          script: |
-            const mimetype = "application/vnd.debian.binary-package";
-            const { data: release } = await github.repos.getLatestRelease({
-              owner: 'BurntSushi',
-              repo: 'ripgrep'
-            });
-            const asset = release.assets.find((asset) => asset.content_type === mimetype);
-            if (asset === undefined) {
-              core.setFailed(`Could not determine .deb package for ${release.name}`);
-            }
-            return asset.browser_download_url
       - name: Download Utilities
-        run: curl -OL ${{ steps.ripgrep-package.outputs.result }}
+        run: >
+          gh release download
+          --repo burntsushi/ripgrep
+          --pattern *.deb
       - name: Install Utilities
         run: sudo apt install ./*.deb
       - name: Setup Node
