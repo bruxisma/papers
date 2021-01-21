@@ -25,7 +25,7 @@ ins > clause {
 
 # Revision History # {#changelog}
 
-## Reivions 1 ## {#r1}
+## Revision 1 ## {#r1}
 
     Changed name of `similar_to` to `analagous_to` based on feedback from
     LEWG(I) and various other folks reaching out about the use of *similar*
@@ -88,7 +88,7 @@ The following is to be added to 18.3 <em>Header `<concepts>` synopsis</em>
 <em>// [concept.different], concept different_from</em><br>
 `template <class T, class U>`<br>
 &emsp;`concept different_from = `&ensp;<em>see below</em>`;`<br><br>
-<em>// [concept.similar], concept analagous_to</em><br>
+<em>// [concept.analagous], concept analagous_to</em><br>
 `template <class T, class U>`<br>
 &emsp;`concept analagous_to = `&ensp;<em>see below</em>`;`<br><br>
 <em>// [concept.distinct], concept distinct_from</em><br>
@@ -106,7 +106,7 @@ The following is to be added to 18.4 *Language-related concepts*
 `template <class T, class U>`<br>
 &emsp;`concept different_from = not same_as<T, U>;`
 <br>
-<clause>18.4.&#65533; Concept `similar` **[concept.similar]**</clause>
+<clause>18.4.&#65533; Concept `analagous_to` **[concept.analagous]**</clause>
 `template <class T, class U>`<br>
 &emsp; `concept analagous_to = same_as<remove_cvref_t<T>, remove_cvref_t<U>>;`
 <br>

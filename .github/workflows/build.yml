@@ -24,17 +24,6 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: '3.x'
-      - name: Find NPM Cache
-        id: npm-cache
-        run: echo "::set-output name=path::$(npm config get cache)"
-      - name: Check NPM Cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.npm-cache.outputs.path }}
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
       - name: Check Python Cache
         uses: actions/cache@v2
         with:
@@ -42,8 +31,6 @@ jobs:
           key: ${{ runner.os}}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-      - name: Install Netlify CLI
-        run: sudo npm install --global netlify-cli
       - name: Install Bikeshed
         run: |
           python -m pip install --upgrade pip
