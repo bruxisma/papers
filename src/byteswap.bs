@@ -6,10 +6,9 @@ Shortname: P1272
 Revision: 3
 Audience: LWG
 Title: Byteswapping for fun&&nuf
-Editor: Isabella Muerte, https://twitter.com/slurpsmadrips
-Date: 2019-07-16
-Repository: slurps-mad-rips/byteswap
-!Implementation: <a href="https://git.io/fAvWz">slurps-mad-rips/byteswap</a>
+Editor: Isabella Muerte
+Date: 2020-07-14
+!Implementation: <a href="https://github.com/slurps-mad-rips/byteswap">slurps-mad-rips/byteswap</a>
 </pre>
 <style>
 ins  {background-color: #CCFFCC; text-decoration: underline;}
@@ -19,16 +18,24 @@ tr.insert { background-color: #CCFFCC; text-decoration: underline; }
 
 # Revision History # {#changelog}
 
+## Revision 3 ## {#r3}
+
+    * Update wording to use C++20 features
+
 ## Revision 2 ## {#r2}
 
-    * Add missing remarks of undefined behavior in cases such as byteswapping an `IntegerType` such as a bitfield.
+    * Add missing remarks of undefined behavior in cases such as byteswapping
+      an `IntegerType` such as a bitfield.
     * Update feature macro value for the Cologne 2019 meeting
 
 ## Revision 1 ## {#r1}
 
-    * Update wording based on feedback from CWG regarding the representation of the "reversed" object.
-    * Update wording based on feedback from LWG subclause location and grammatical changes
-    * Readjust wording to use [[N4820]] library wording constructs instead of [[N4672]]
+    * Update wording based on feedback from CWG regarding the representation of
+      the "reversed" object.
+    * Update wording based on feedback from LWG subclause location and
+      grammatical changes
+    * Readjust wording to use [[N4820]] library wording constructs instead of
+      [[N4672]]
 
 ## Revision 0 ## {#r0}
 
@@ -66,12 +73,9 @@ The function's full specification is:
 
 ```c++
 namespace std {
-    template <class IntegerType>
-    constexpr IntegerType byteswap (IntegerType value) noexcept;
+  constexpr auto byteswap (integral auto value) noexcept;
 }
 ```
-
-Where `std::is_integral_v<IntegerType>` is `true`.
 
 # Wording # {#wording}
 
@@ -80,18 +84,10 @@ Synopsis</em> [**bit.syn**]:
 
 <blockquote>
 <pre highlight="c++">
-<em>// 25.5.3, bit_cast</em>
-template &lt;typename To, typename From&gt;
-  constexpr To bit_cast (const From& from) noexcept;
 <ins>
 <em>// 25.5.4, byteswap</em>
-template &lt;class IntegerType&gt;
-  constexpr IntegerType byteswap (IntegerType value) noexcept;
+  constexpr auto byteswap (integral auto value) noexcept;
 </ins>
-template &lt;class T&gt;
-  constexpr bool ispow2(T x) noexcept;
-template &lt;class T&gt;
-  constexpr T ceil2(T x) noexcept;
 ...
 </pre>
 </blockquote>
@@ -101,14 +97,14 @@ The following is to be placed *before* the current subclause 25.5.4 [**bit.pow.t
 <blockquote>
 <ins>
 ```cpp
-template <class IntegerType>
-  constexpr IntegerType byteswap (IntegerType value) noexcept;
+constexpr auto byteswap (integral auto value) noexcept;
 ```
-<sup>1</sup> *Constraints*: `std::is_integral_v<IntegerType>` is `true`.
+<sup>1</sup> *Mandates*: `value` does not have padding bits.
 <br>
-<sup>2</sup> *Mandates*: `IntegerType` does not have padding bits.
-<br>
-<sup>3</sup> *Returns*: An object of type `IntegerType`. Let the sequence `R` comprise the bytes of the object representation of `value` in reverse order. Each byte in the object representation of the result is equal to the byte in the corresponding position in `R`.
+<sup>3</sup> *Returns*: An object of the same type as `value`. Let the sequence
+`R` comprise the bytes of the object representation of `value` in reverse
+order. Each byte in the object representation of the result is equal to the
+byte in the corresponding position in `R`.
 <br>
 </ins>
 </blockquote>
@@ -120,7 +116,19 @@ The following modification in 26.5.3 [**bit.cast**]:
 template<typename To, typename From>
   constexpr To bit_cast(const From& from) noexcept;
 ```
-*Returns*: An object of type `To`. Each bit of the value representation of the result is equal to the corresponding bit in the object representation of `from`. Padding bits of the `To` object are unspecified. If there is no value of type `To` corresponding to the value representation produced, the behavior is undefined. If there are multiple such values, which value is produced is unspecified. <ins>A bit in the value representation of the result is indeterminate if does not correspond to a bit in the value representation of `from` or corresponds to a bit of an object that is not within its lifetime or has an indeterminate value ([basic.indet]). For each bit in the value representation of the result that is indeterminate, the smallest object containing that bit has an indeterminate value; the behavior is undefined unless that object is of unsigned ordinary character type or `std::byte` type. The result does not otherwise contain any indeterminate values.</ins>
+*Returns*: An object of type `To`. Each bit of the value representation of the
+result is equal to the corresponding bit in the object representation of
+`from`. Padding bits of the `To` object are unspecified. If there is no value
+of type `To` corresponding to the value representation produced, the behavior
+is undefined. If there are multiple such values, which value is produced is
+unspecified. <ins>A bit in the value representation of the result is
+indeterminate if does not correspond to a bit in the value representation of
+`from` or corresponds to a bit of an object that is not within its lifetime or
+has an indeterminate value ([basic.indet]). For each bit in the value
+representation of the result that is indeterminate, the smallest object
+containing that bit has an indeterminate value; the behavior is undefined
+unless that object is of unsigned ordinary character type or `std::byte` type.
+The result does not otherwise contain any indeterminate values.</ins>
 </blockquote>
 
 ## Feature Testing ## {#feature-test}
@@ -141,7 +149,7 @@ In 16.3.1 [**support.limits.general**], Table 36, add a new row below
   </tr>
   <tr class="insert">
     <td>**__cpp_lib_byteswap**</td>
-    <td>**??????L**</td>
+    <td>**20????L**</td>
     <td>**&lt;bit&gt;**</td>
   </tr>
   <tr>

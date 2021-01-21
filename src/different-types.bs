@@ -25,6 +25,12 @@ ins > clause {
 
 # Revision History # {#changelog}
 
+## Reivions 1 ## {#r1}
+
+    Changed name of `similar_to` to `analagous_to` based on feedback from
+    LEWG(I) and various other folks reaching out about the use of *similar*
+    in [conv.qual]/3. This also avoids conflict with P2196.
+
 ## Revision 0 ## {#r0}
 
     Initial Release. 🥳
@@ -38,7 +44,7 @@ are true*, followed by something like `is_same_v<remove_cvref_t<U>, type>`. It
 would, honestly, be easier to express these with concepts. Furthermore, the
 inversion of the `std::same_as` concept is much more common than `std::same_as`
 itself when trying to constrain signatures of template types. Additionally, in
-the realm of ranges, users tend to need to express that *similar* types are ok
+the realm of ranges, users tend to need to express that *analagous* types are ok
 in some instances, while *distinct* (or *different*, see [[#feedback]] regarding
 this phrase) are fairly common. In the author's work codebase, the inversion of
 `std::same_as` appears about 20 times for each time where `std::same_as` is
@@ -47,14 +53,14 @@ surprising if other code bases had similar ratios, though most likely they are
 not as extreme.
 
 In the interest of symmetry with `same_as` and `different_from`, this paper
-provides both `similar_to` and `distinct_from`, although the wording found
+provides both `analagous_to` and `distinct_from`, although the wording found
 below only redefines wording in terms of `different_from`, and `distinct_from`.
 
 # Request for Feedback # {#feedback}
 
 Currently, there is some ambiguity with the naming of `different_from` and
 `distinct_from`. When something is *distinct*, it typically implies that it is
-set apart and completely dissimilar to something else. However, the direct
+set apart and completely unique from something else. However, the direct
 antonym of *same* in english is *different*. The author is fine with swapping
 the definition of `different_from` and `distinct_from`, but will defer to
 any consensus from LEWG or LWG if it is deemed necessary to swap their
@@ -82,9 +88,9 @@ The following is to be added to 18.3 <em>Header `<concepts>` synopsis</em>
 <em>// [concept.different], concept different_from</em><br>
 `template <class T, class U>`<br>
 &emsp;`concept different_from = `&ensp;<em>see below</em>`;`<br><br>
-<em>// [concept.similar], concept similar_to</em><br>
+<em>// [concept.similar], concept analagous_to</em><br>
 `template <class T, class U>`<br>
-&emsp;`concept similar_to = `&ensp;<em>see below</em>`;`<br><br>
+&emsp;`concept analagous_to = `&ensp;<em>see below</em>`;`<br><br>
 <em>// [concept.distinct], concept distinct_from</em><br>
 `template <class T, class U>`<br>
 &emsp;`concept distinct_from = `&ensp;<em>see below</em>`;`<br>
@@ -102,11 +108,11 @@ The following is to be added to 18.4 *Language-related concepts*
 <br>
 <clause>18.4.&#65533; Concept `similar` **[concept.similar]**</clause>
 `template <class T, class U>`<br>
-&emsp; `concept similar_to = same_as<remove_cvref_t<T>, remove_cvref_t<U>>;`
+&emsp; `concept analagous_to = same_as<remove_cvref_t<T>, remove_cvref_t<U>>;`
 <br>
 <clause>18.4.&#65533; Concept `distinct_from` **[concept.distinct]**</clause>
 `template <class T, class U>`<br>
-&emsp;`concept distinct_from = not similar_to<T, U>;`
+&emsp;`concept distinct_from = not analagous_to<T, U>;`
 </ins>
 </blockquote>
 
@@ -306,7 +312,7 @@ The following is to be added to the *Index of library concepts*
 
 <p>
 <ins><code>different_from</code><strong>[concept.different]</strong></ins>,
-<ins><code>similar_to</code><strong>[concept.similar]</strong></ins>,
+<ins><code>analagous_to</code><strong>[concept.analagous]</strong></ins>,
 <ins><code>distinct_from</code><strong>[concept.distinct]</strong></ins>
 </p>
 

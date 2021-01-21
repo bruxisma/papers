@@ -9,7 +9,7 @@ BIKESHED_PAGES =
 
 RM = $(if $(OS),rd /S /Q,rm -r)
 EXTRACT = rg --no-line-number --with-filename 'Shortname: ([PD].*)$$' --replace '$$1'
-GITHUB_REPOSITORY ?= $(shell git remote get-url origin --push | rg --no-line-number "^.*github.com[:/](.+).git" --replace "$$1")
+GITHUB_REPOSITORY ?= $(shell git remote get-url origin --push | rg --no-line-number "^.*github.com[:/](.+)[.]git" --replace '$$1')
 GITHUB_SHA ?= HEAD
 
 BIKESHEDFLAGS += --md-local-boilerplate="computed-metadata yes"

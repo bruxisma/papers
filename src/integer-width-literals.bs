@@ -34,14 +34,14 @@ Initial Release 🎉
 # Motivation # {#motivation}
 
 Proposal [[p0330r2]] proposes literal suffixes for `ptrdiff_t` and `size_t`. In
-it, the question [[p0330r2#design-std-ints|
-What about the fixed/least/max (unsigned) int types?]] is given regarding the
-fixed/least/max integer types provided by `<cstdint>`. As that paper has
-decided to focus exclusively on `ptrdiff_t` and `size_t`, this proposal will
-instead focus on the *fixed* width integer literals. The problem of least/max
-literals is left for another time and paper. The primary goal of this paper is
-to replace the `UINTxx_C`/`INTxx_C` macros found in `<cstdint>` with user
-defined literal suffixes.
+it, the question [[p0330r2#design-std-ints| What about the fixed/least/max
+(unsigned) int types?]] is given regarding the fixed/least/max integer types
+provided by `<cstdint>`. As that paper has decided to focus exclusively on
+`ptrdiff_t` and `size_t`, this proposal will instead focus on the *fixed* width
+integer literals. The problem of least/max literals is left for another time
+and paper. The primary goal of this paper is to replace the
+`UINTxx_C`/`INTxx_C` macros found in `<cstdint>` with user defined literal
+suffixes.
 
 As an example, one can see the results of the compiler results on
 <a href="https://gcc.godbolt.org/z/CzOF2m">godbolt</a>.
