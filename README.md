@@ -1,3 +1,7 @@
+# Archived
+
+This repository has been archived as I am no longer participating in the C++ standards committee
+
 # Overview
 
 This repository contains all papers and proposals for WG21 (The C++ Standards
